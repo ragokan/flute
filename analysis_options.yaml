@@ -63,7 +63,3 @@ linter:
     - hash_and_equals
     - avoid_equals_and_hash_code_on_mutable_classes
     - avoid_null_checks_in_equality_operators
-
-analyzer:
-  exclude:
-    # - lib/main.dart
