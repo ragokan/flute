@@ -1,16 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// Because the function we are going to use is [showDialog] from flutter and
-/// [Flute.showDialog()], we get problems. I renamed this variable here to
-/// prevent name confusions.
-final _showDialog = showDialog;
-
-/// The way to use widgets like *snackbar* or *bottom modal sheet* without
-/// context, we have this mixin. We have to override the [context] in Flute.
-mixin FluteWidgets {
-  /// The [BuildContext]:[context] of your app.
-  BuildContext? get context;
-
+/// Widget extensions of [BuildContext]
+extension ContextWidgetExtensions on BuildContext {
   /// Shows a [SnackBar] across all registered [Scaffold]s but instead of
   /// [SnackBar] widget, you can just give it a string.
   void showToast({
@@ -19,8 +10,9 @@ mixin FluteWidgets {
     SnackBarAction? action,
     TextStyle? textStyle,
     Color? backgroundColor,
+    SnackBarBehavior? behavior,
   }) {
-    ScaffoldMessenger.of(context!).showSnackBar(
+    ScaffoldMessenger.of(this).showSnackBar(
       SnackBar(
         content: Text(
           text,
@@ -29,37 +21,15 @@ mixin FluteWidgets {
         backgroundColor: backgroundColor,
         duration: duration ?? const Duration(seconds: 5),
         action: action,
+        behavior: behavior,
       ),
     );
   }
 
   /// Shows a [SnackBar] across all registered [Scaffold]s.
   void showSnackBar({required SnackBar snackBar}) {
-    ScaffoldMessenger.of(context!).showSnackBar(snackBar);
+    ScaffoldMessenger.of(this).showSnackBar(snackBar);
   }
-
-  /// Displays a Material dialog above the current contents of the app,
-  /// with Material entrance and exit animations, modal barrier color, and
-  ///  modal barrier behavior (dialog is dismissible with a tap on the barrier).
-  Future<T?> showDialog<T>({
-    required Widget child,
-    bool barrierDismissible = true,
-    Color? barrierColor = Colors.black54,
-    String? barrierLabel,
-    bool useSafeArea = true,
-    bool useRootNavigator = true,
-    RouteSettings? routeSettings,
-  }) async =>
-      _showDialog(
-        context: context!,
-        builder: (_) => child,
-        barrierColor: barrierColor,
-        barrierDismissible: barrierDismissible,
-        barrierLabel: barrierLabel,
-        routeSettings: routeSettings,
-        useRootNavigator: useRootNavigator,
-        useSafeArea: useSafeArea,
-      );
 
   /// Shows a modal material design bottom sheet.
   Future<T?> showModal<T>({
@@ -75,9 +45,10 @@ mixin FluteWidgets {
     ShapeBorder? shape,
     AnimationController? transitionAnimationController,
     bool useRootNavigator = false,
+    BoxConstraints? constraints,
   }) async =>
       showModalBottomSheet(
-        context: context!,
+        context: this,
         builder: (_) => child,
         backgroundColor: backgroundColor,
         barrierColor: barrierColor,
@@ -90,5 +61,6 @@ mixin FluteWidgets {
         shape: shape,
         transitionAnimationController: transitionAnimationController,
         useRootNavigator: useRootNavigator,
+        constraints: constraints,
       );
 }

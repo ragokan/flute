@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'localization/localization_functions.dart';
 
 /// Flute provides easier ways to use utility functions.
 ///
@@ -14,7 +13,7 @@ mixin FluteFunctions {
   /// ```dart
   /// Flute.setTimeout(5, () => print('5 second passed'));
   /// ```
-  void setTimeout(int seconds, Function callback) =>
+  Timer setTimeout(int seconds, Function callback) =>
       Timer(Duration(seconds: seconds), () => callback());
 
   /// [seconds] is the amount of time that Flute will wait to call
@@ -34,16 +33,4 @@ mixin FluteFunctions {
     final timer = Timer.periodic(Duration(seconds: seconds), (_) => callback());
     return timer.cancel;
   }
-
-  /// Uses your locale and translates the sentences.
-  ///
-  /// Usage
-  ///
-  /// ```dart
-  /// Flute.localize('hello');
-  /// ```
-  /// That simple
-  ///
-  /// Check translation documents for this.
-  String localize(String key) => localizeSimple(key);
 }

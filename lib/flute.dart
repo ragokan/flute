@@ -7,10 +7,7 @@
 ///  need context to have a state or update state.
 library flute;
 
-export 'public_types/main.dart';
-export 'src/flute_apps/index.dart';
 export 'src/flute_extensions/index.dart';
 export 'src/flute_instance.dart';
-export 'src/flute_state_management/index.dart';
 export 'src/flute_storage/flute_storage.dart';
 export 'src/flute_utilities/index.dart';

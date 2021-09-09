@@ -42,17 +42,6 @@ class ImplFluteStorage {
   /// Get data from local storage.
   T? read<T>(String key) => _isInitialized ? _currentData[key] : null;
 
-  /// Get all keys from local storage.
-  List<String>? readAllKeys() =>
-      _isInitialized ? _currentData.keys.toList() : null;
-
-  /// Get all values from local storage.
-  List<dynamic>? readAllValues() =>
-      _isInitialized ? _currentData.values.toList() : null;
-
-  /// Get everything from local storage.
-  Map<String, dynamic>? readAll() => _isInitialized ? _currentData : null;
-
   /// Writes current data to the local storage.
   void write<T>(String key, T value) {
     if (!_isInitialized) return;
@@ -60,10 +49,24 @@ class ImplFluteStorage {
     _saveToWebStorage();
   }
 
+  /// Writes multiple data to the local storage.
+  void writeMulti(Map<String, dynamic> data) {
+    if (!_isInitialized) return;
+    data.forEach((key, value) => _currentData[key] = value);
+    _saveToWebStorage();
+  }
+
   /// Deletes a key from the storage.
-  void removeKey<T>(String key) {
+  void removeKey(String key) {
     if (!_isInitialized) return;
     _currentData.remove(key);
+    _saveToWebStorage();
+  }
+
+  /// Deletes a key from the storage.
+  void removeKeys(List<String> keys) {
+    if (!_isInitialized) return;
+    keys.forEach((key) => _currentData.remove(key));
     _saveToWebStorage();
   }
 

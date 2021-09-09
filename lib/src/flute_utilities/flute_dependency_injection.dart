@@ -25,10 +25,6 @@ mixin FluteDependencyInjection {
   /// ```
   T inject<T>(T dependency) {
     _dependencies.add(dependency);
-    if (dependency is FluteController) {
-      // We call the onInject method if the controller is [FluteController].
-      dependency.onInject();
-    }
     return dependency;
   }
 
