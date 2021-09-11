@@ -11,7 +11,11 @@ extension ContextWidgetExtensions on BuildContext {
     TextStyle? textStyle,
     Color? backgroundColor,
     SnackBarBehavior? behavior,
+    bool hideCurrentSnackbar = true,
   }) {
+    if (hideCurrentSnackbar) {
+      ScaffoldMessenger.of(this).hideCurrentSnackBar();
+    }
     ScaffoldMessenger.of(this).showSnackBar(
       SnackBar(
         content: Text(
