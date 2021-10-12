@@ -5,16 +5,16 @@ import 'dart:async';
 /// I hope we can have more utility functions in future, the aim is to reduce
 /// the code repeating.
 mixin FluteFunctions {
-  /// [seconds] is the amount of time that Flute wait to call the function.
-  /// after x [seconds], [callback] funciton will be called.
+  /// [duration] is the amount of time that Flute wait to call the function.
+  /// after x amount of [duration], [callback] funciton will be called.
   ///
   /// Example
   ///
   /// ```dart
   /// Flute.setTimeout(5, () => print('5 second passed'));
   /// ```
-  Timer setTimeout(int seconds, Function callback) =>
-      Timer(Duration(seconds: seconds), () => callback());
+  Timer setTimeout(Duration duration, Function callback) =>
+      Timer(duration, () => callback());
 
   /// [seconds] is the amount of time that Flute will wait to call
   /// the function again, it will continiously work.

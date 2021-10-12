@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 
-/// The FluteStorage implementation for web.
+/// The FluteStorage implementation for io.
 class ImplFluteStorage {
   bool _isInitialized = false;
 
@@ -22,10 +22,10 @@ class ImplFluteStorage {
   /// the path library, an amazingly simple library that gives us
   /// documents directory of app.
   Future<void> init({required String storageName}) async {
-    var appDocDirectory = await getApplicationDocumentsDirectory();
-    var path = appDocDirectory.path;
-    var slash = Platform.isWindows ? '\\' : '/';
-    var dir = '$path$slash$storageName.fluteStorage';
+    final appDocDirectory = await getApplicationDocumentsDirectory();
+    final path = appDocDirectory.path;
+    final slash = Platform.isWindows ? '\\' : '/';
+    final dir = '$path$slash$storageName.fluteStorage';
     File(dir).createSync(recursive: true);
     _file = File(dir);
     _currentData = _getData();
@@ -38,8 +38,9 @@ class ImplFluteStorage {
       return stringData.trim() == ''
           ? _emptyData
           : jsonDecode(stringData) ?? _emptyData;
-    } on FormatException catch (_) {
+    } on FormatException catch (error) {
       clearStorage();
+      print('An error happened in FluteStorage\n Error: ${error.message}');
       return _emptyData;
     }
   }
@@ -51,7 +52,9 @@ class ImplFluteStorage {
 
   /// Writes current data to the local storage.
   void write<T>(String key, T value) {
-    if (!_isInitialized) return;
+    if (!_isInitialized) {
+      return print('You have to init FluteStorage to use it.');
+    }
     _currentData[key] = value;
     _saveToIOStorage();
   }

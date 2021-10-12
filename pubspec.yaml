@@ -1,6 +1,6 @@
 name: flute
-description: Flutter best friend for coding that uses provider in background!
-version: 1.0.3
+description: A weird flutter package that has some extensions and local storage.
+version: 1.0.4
 homepage: https://github.com/ragokan/flute
 repository: https://github.com/ragokan/flute
 
