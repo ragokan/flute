@@ -42,7 +42,6 @@ linter:
     - empty_constructor_bodies
     - unnecessary_new
     - unnecessary_const
-    - avoid_catches_without_on_clauses
     - avoid_catching_errors
     - use_rethrow_when_possible
     - use_to_and_as_if_applicable
