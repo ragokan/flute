@@ -1,3 +1,7 @@
+## 1.0.6
+
+- New state improvements.
+
 ## 1.0.5
 
 - Add Provider.
