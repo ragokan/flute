@@ -1,6 +1,7 @@
 ## 1.0.6
 
 - New state improvements.
+- Flute providers for me.
 
 ## 1.0.5
 
