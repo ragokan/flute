@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../flute.dart';
+import '../../../flute.dart';
 
 abstract class FluteThemeProvider extends FluteProvider<ThemeData> {
   FluteThemeProvider(ThemeData state) : super(state);

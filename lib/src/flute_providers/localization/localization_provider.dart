@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../flute.dart';
+import '../../../flute.dart';
 import 'language_base.dart';
 
 /// Example

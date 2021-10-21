@@ -32,9 +32,16 @@ class _FluteStorage extends ImplFluteStorage {
   ///   print('Count is changed to $count');
   /// });
   /// ```
-  void Function() listen<T>(String key, KeyCallback<T> callback) {
+  void Function() listen<T>(
+    String key,
+    KeyCallback<T> callback, {
+    bool callImmediately = true,
+  }) {
     final listener = StorageListener<T>(key: key, callback: callback);
     _listeners.add(listener);
+    if (callImmediately) {
+      listener.callback(read(key));
+    }
     return () => _listeners.remove(listener);
   }
 

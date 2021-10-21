@@ -1,17 +1,26 @@
 import 'package:dio/dio.dart';
-import '../../flute.dart';
+import '../../../flute.dart';
 
 abstract class FluteApiProvider {
   String? token;
-  String endPoint;
 
-  void Function()? dispose;
+  String? endPoint;
 
-  FluteApiProvider({
-    this.token,
-    required this.endPoint,
-  }) {
-    dispose = FluteStorage.listen<String>(kTokenKey, (key) => token = key);
+  void Function()? _removeListener;
+
+  void onError(DioError error, ErrorInterceptorHandler handler) {
+    handler.next(error);
+  }
+
+  FluteApiProvider({this.endPoint}) {
+    _removeListener =
+        FluteStorage.listen<String>(kTokenKey, (key) => token = key);
+  }
+
+  void dispose() {
+    _removeListener?.call();
+    token = null;
+    endPoint = null;
   }
 
   Future<Response<T>> get<T>(
@@ -77,14 +86,16 @@ abstract class FluteApiProvider {
         options: options,
       );
 
-  void onError(DioError error, ErrorInterceptorHandler handler) {
-    handler.next(error);
-  }
-
   Dio _getDio() {
     final _dio = Dio();
 
-    if (token != null) _dio.options.headers['Authorization'] = token;
+    if (token != null) {
+      _dio.options.headers['Authorization'] = token;
+    }
+
+    if (endPoint != null) {
+      _dio.options.baseUrl = endPoint!;
+    }
 
     _dio.interceptors.add(
       InterceptorsWrapper(
