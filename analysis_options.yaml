@@ -2,7 +2,6 @@ include: package:pedantic/analysis_options.yaml
 
 linter:
   rules:
-    - public_member_api_docs
     - prefer_relative_imports
     - prefer_const_constructors
     - directives_ordering
@@ -46,14 +45,12 @@ linter:
     - use_rethrow_when_possible
     - use_to_and_as_if_applicable
     - one_member_abstracts
-    - avoid_classes_with_only_static_members
     - prefer_mixin
     - prefer_final_fields
     - use_setters_to_change_properties
     - avoid_setters_without_getters
     - avoid_returning_null
     - avoid_returning_this
-    - type_annotate_public_apis
     - omit_local_variable_types
     - avoid_return_types_on_setters
     - prefer_generic_function_type_aliases

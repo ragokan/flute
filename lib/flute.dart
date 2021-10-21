@@ -12,6 +12,8 @@ export 'package:provider/provider.dart';
 
 export 'src/flute_extensions/index.dart';
 export 'src/flute_instance.dart';
+export 'src/flute_localization/index.dart';
 export 'src/flute_provider/index.dart';
+export 'src/flute_providers/index.dart';
 export 'src/flute_storage/flute_storage.dart';
 export 'src/flute_utilities/index.dart';
