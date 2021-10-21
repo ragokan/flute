@@ -29,6 +29,8 @@ import 'language_base.dart';
 /// ```
 abstract class FluteLocalizationProvider<T extends FluteLanguageBase>
     extends FluteProvider<T> {
+  final String kLocaleKey = 'kLocaleKey';
+
   FluteLocalizationProvider(T language) : super(language) {
     // Get data from save
     setLocale(FluteStorage.read<String>('locale'));
@@ -48,6 +50,6 @@ abstract class FluteLocalizationProvider<T extends FluteLanguageBase>
   void setLocale(String? newLocale) {
     if (newLocale == null) return;
     set(locales[newLocale]!);
-    FluteStorage.write('locale', newLocale);
+    FluteStorage.write(kLocaleKey, newLocale);
   }
 }

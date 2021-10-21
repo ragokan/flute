@@ -3,11 +3,41 @@
 // we import storage, else we import web.
 import 'modules/flute_web_storage.dart'
     if (dart.library.io) 'modules/flute_io_storage.dart';
+import 'modules/storage_listener_model.dart';
 
 /// The implementation of [FluteStorage]
 ///
 /// The [ImplFluteStorage] depends on the import above.
 class _FluteStorage extends ImplFluteStorage {
+  final _listeners = <StorageListener>{};
+
+  /// [_notify] is the method that notifies all listeners.
+  void _notify([String? key]) => _listeners.forEach(
+        (element) {
+          if (key == null) {
+            element.callback(null);
+          } else if (element.key == key) {
+            element.callback(read(key));
+          }
+        },
+      );
+
+  /// [listen] gives you a callback that called whenever the [key]
+  /// you declared changes/creates.
+  ///
+  /// Usage
+  ///
+  /// ```dart
+  /// listen<int>('count',(int count) => {
+  ///   print('Count is changed to $count');
+  /// });
+  /// ```
+  void Function() listen<T>(String key, KeyCallback<T> callback) {
+    final listener = StorageListener<T>(key: key, callback: callback);
+    _listeners.add(listener);
+    return () => _listeners.remove(listener);
+  }
+
   /// [init] function is required to start [FluteStorage]
   ///
   /// The best practice to use it is using the function at the start of *main*
@@ -47,7 +77,10 @@ class _FluteStorage extends ImplFluteStorage {
   /// FluteStorage.write<String>('myName','Flute');
   /// ```
   @override
-  void write<T>(String key, T value) => super.write(key, value);
+  void write<T>(String key, T value) {
+    super.write(key, value);
+    _notify(key);
+  }
 
   /// Writes multiple data to the local storage.
   ///
@@ -57,7 +90,10 @@ class _FluteStorage extends ImplFluteStorage {
   /// FluteStorage.writeMulti({'myName' : 'Flute', 'flute' : 'best'});
   /// ```
   @override
-  void writeMulti(Map<String, dynamic> data) => super.writeMulti(data);
+  void writeMulti(Map<String, dynamic> data) {
+    super.writeMulti(data);
+    data.keys.forEach(_notify);
+  }
 
   /// Writes a value to the storage with a key if the key's value is null.
   ///
@@ -67,7 +103,10 @@ class _FluteStorage extends ImplFluteStorage {
   /// FluteStorage.removeKey('myName');
   /// ```
   @override
-  void removeKey(String key) => super.removeKey(key);
+  void removeKey(String key) {
+    super.removeKey(key);
+    _notify(key);
+  }
 
   /// Writes a value to the storage with a key if the key's value is null.
   ///
@@ -77,16 +116,25 @@ class _FluteStorage extends ImplFluteStorage {
   /// FluteStorage.removeKeys(['myName', 'flute']);
   /// ```
   @override
-  void removeKeys(List<String> keys) => super.removeKeys(keys);
+  void removeKeys(List<String> keys) {
+    super.removeKeys(keys);
+    keys.forEach(_notify);
+  }
 
   /// Deletes all keys and values from the storage, the file
   /// will still stay at its location.
   @override
-  void clearStorage() => super.clearStorage();
+  void clearStorage() {
+    super.clearStorage();
+    _notify();
+  }
 
   /// Deletes the file and data completely.
   @override
-  void deleteStorage() => super.deleteStorage();
+  void deleteStorage() {
+    super.deleteStorage();
+    _notify();
+  }
 }
 
 /// [FluteStorage] is a local storage implementation for *Flute*.

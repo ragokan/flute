@@ -10,6 +10,7 @@ library flute;
 // Directly exporting provider instead of installing provider, too.
 export 'package:provider/provider.dart';
 
+export 'src/flute_constants.dart';
 export 'src/flute_extensions/index.dart';
 export 'src/flute_instance.dart';
 export 'src/flute_localization/index.dart';
