@@ -54,7 +54,6 @@ linter:
     - avoid_return_types_on_setters
     - prefer_generic_function_type_aliases
     - avoid_private_typedef_functions
-    - avoid_positional_boolean_parameters
     - hash_and_equals
     - avoid_equals_and_hash_code_on_mutable_classes
     - avoid_null_checks_in_equality_operators
