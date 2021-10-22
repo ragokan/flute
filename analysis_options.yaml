@@ -2,9 +2,10 @@ include: package:pedantic/analysis_options.yaml
 
 linter:
   rules:
-    - prefer_relative_imports
-    - prefer_const_constructors
-    - directives_ordering
+    # - prefer_relative_imports
+    # - prefer_const_constructors
+    # - directives_ordering
+    # - avoid_relative_lib_imports
     - annotate_overrides
     - await_only_futures
     - camel_case_types
@@ -19,10 +20,8 @@ linter:
     - constant_identifier_names
     - non_constant_identifier_names
     - empty_statements
-    - lines_longer_than_80_chars
     - curly_braces_in_flow_control_structures
     - implementation_imports
-    - avoid_relative_lib_imports
     - prefer_adjacent_string_concatenation
     - prefer_interpolation_to_compose_strings
     - unnecessary_brace_in_string_interps
