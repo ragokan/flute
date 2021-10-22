@@ -1,15 +1,8 @@
 import 'package:flute/flute.dart';
 
-enum Status {
-  initial,
-  loading,
-  done,
-  error,
-}
+typedef StatusCallback<T, X extends FluteProvider<S>, S> = T Function(S state);
 
-typedef StatusCallback<T> = T Function();
-
-mixin StatusProviderBase on FluteProviderBase {
+mixin StatusProvider<X extends FluteProvider<S>, S> on FluteProvider<S> {
   Status _status = Status.initial;
 
   Status get status => _status;
@@ -21,22 +14,22 @@ mixin StatusProviderBase on FluteProviderBase {
   }
 
   T? when<T>({
-    StatusCallback<T>? initial,
-    StatusCallback<T>? loading,
-    StatusCallback<T>? done,
-    StatusCallback<T>? error,
+    StatusCallback<T, X, S>? initial,
+    StatusCallback<T, X, S>? loading,
+    StatusCallback<T, X, S>? done,
+    StatusCallback<T, X, S>? error,
   }) {
     switch (_status) {
       case Status.initial:
-        return initial?.call();
+        return initial?.call(state);
       case Status.loading:
-        return loading?.call();
+        return loading?.call(state);
       case Status.done:
-        return done?.call();
+        return done?.call(state);
       case Status.error:
-        return error?.call();
+        return error?.call(state);
       default:
-        return initial?.call();
+        return initial?.call(state);
     }
   }
 }
