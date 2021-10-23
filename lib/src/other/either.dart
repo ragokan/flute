@@ -5,9 +5,9 @@ abstract class Either<L, R> {
 
   T fold<T>(T Function(L l) ifLeft, T Function(R r) ifRight);
 
-  bool get isLeft => fold((_) => true, (_) => false);
+  bool get isLeft => this is L;
 
-  bool get isRight => fold((_) => false, (_) => true);
+  bool get isRight => this is R;
 
   L get left => (this as L);
 
