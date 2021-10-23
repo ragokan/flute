@@ -5,6 +5,7 @@ mixin LoadingProvider on FluteProviderBase {
   bool? _isLoading;
 
   void setIsLoading(bool? to) {
+    if (_isLoading == to) return;
     _isLoading = to;
     notifyListeners();
   }

@@ -6,7 +6,7 @@ abstract class FluteApiProvider {
 
   String? endPoint;
 
-  void Function()? _removeListener;
+  VoidFunction? _removeListener;
 
   void onError(DioError error, ErrorInterceptorHandler handler) {
     handler.next(error);

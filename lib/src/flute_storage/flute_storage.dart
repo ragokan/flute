@@ -1,6 +1,8 @@
 // I learned this usage from https://github.com/gskinnerTeam/flutter-universal-platform/blob/master/lib/universal_platform.dart
 // What it does it, if we have dart.library.io, which doesnt exists on web
 // we import storage, else we import web.
+import 'package:flute/flute.dart';
+
 import 'modules/flute_web_storage.dart'
     if (dart.library.io) 'modules/flute_io_storage.dart';
 import 'modules/storage_listener_model.dart';
@@ -32,7 +34,7 @@ class _FluteStorage extends ImplFluteStorage {
   ///   print('Count is changed to $count');
   /// });
   /// ```
-  void Function() listen<T>(
+  VoidFunction listen<T>(
     String key,
     KeyCallback<T> callback, {
     bool callImmediately = true,
