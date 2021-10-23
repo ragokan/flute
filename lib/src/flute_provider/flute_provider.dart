@@ -49,12 +49,19 @@ class FluteProvider<T> extends FluteProviderBase {
   /// // Call removeListener whenever you finish your job, maybe on dispose.
   /// removeListener();
   /// ```
-  Function listen(_ListenerCallback<T> listener) {
+  Function listen(
+    _ListenerCallback<T> listener, {
+    bool callImmediately = true,
+  }) {
     void _listener() {
       listener(_state);
     }
 
     addListener(_listener);
+
+    if (callImmediately) {
+      _listener();
+    }
 
     return () => removeListener(_listener);
   }

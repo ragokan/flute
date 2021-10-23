@@ -16,8 +16,14 @@ class FluteProviderBase implements Listenable {
   }
 
   @override
-  void addListener(VoidCallback listener) {
+  void addListener(
+    VoidCallback listener, {
+    bool callImmediately = false,
+  }) {
     _listeners.add(listener);
+    if (callImmediately) {
+      listener();
+    }
   }
 
   @override
