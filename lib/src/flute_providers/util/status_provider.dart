@@ -22,7 +22,27 @@ mixin StatusProvider<X extends FluteProvider<S>, S> on FluteProvider<S> {
     notifyListeners();
   }
 
-  T? when<T>({
+  T when<T>({
+    required StatusCallback<T, X, S> initial,
+    required StatusCallback<T, X, S> loading,
+    required StatusCallback<T, X, S> done,
+    required StatusCallback<T, X, S> error,
+  }) {
+    switch (_status) {
+      case Status.initial:
+        return initial(state);
+      case Status.loading:
+        return loading(state);
+      case Status.done:
+        return done(state);
+      case Status.error:
+        return error(state);
+      default:
+        return initial(state);
+    }
+  }
+
+  T? maybeWhen<T>({
     StatusCallback<T, X, S>? initial,
     StatusCallback<T, X, S>? loading,
     StatusCallback<T, X, S>? done,
