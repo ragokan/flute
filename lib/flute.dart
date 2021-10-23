@@ -18,3 +18,4 @@ export 'src/flute_providers/index.dart';
 export 'src/flute_storage/flute_storage.dart';
 export 'src/flute_utilities/index.dart';
 export 'src/flute_widgets/index.dart';
+export 'src/other/index.dart';
