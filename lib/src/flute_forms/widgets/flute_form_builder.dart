@@ -1,13 +1,16 @@
 import 'package:flute/flute.dart';
 import 'package:flutter/material.dart';
 
+typedef _FormBuilder = Widget Function(
+    FluteFormProvider provider, BuildContext context, FocusScopeNode node);
+
 class FluteFormBuilder extends StatefulWidget {
   FluteFormBuilder({
     Key? key,
     required this.builder,
   }) : super(key: key);
 
-  final WidgetBuilder builder;
+  final _FormBuilder builder;
 
   @override
   _FluteFormBuilderState createState() => _FluteFormBuilderState();
@@ -19,14 +22,12 @@ class _FluteFormBuilderState extends State<FluteFormBuilder> {
   void initState() {
     super.initState();
     fluteFormProvider = FluteFormProvider();
-    fluteFormProvider.focusNode = FocusScope.of(context);
   }
 
   @override
   Widget build(BuildContext context) => FluteProviderWidget.value(
         value: fluteFormProvider,
-        builder: (ctx, _) => Form(
-          child: widget.builder(ctx),
-        ),
+        builder: (ctx, _) =>
+            widget.builder(fluteFormProvider, ctx, FocusScope.of(ctx)),
       );
 }

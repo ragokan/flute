@@ -11,8 +11,6 @@ class FluteFormProvider extends FluteProviderBase {
     return _fields.every((element) => element.isValid);
   }
 
-  late final FocusScopeNode focusNode;
-
   void add(FluteFormModel field) {
     _fields.add(field);
     _values[field.name] = null;

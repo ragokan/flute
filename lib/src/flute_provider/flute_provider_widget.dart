@@ -29,6 +29,7 @@ class FluteProviderWidget<T extends FluteProviderBase>
     required T value,
     bool? lazy,
     TransitionBuilder? builder,
+    UpdateShouldNotify<T>? updateShouldNotify,
     Widget? child,
   }) : super.value(
           value: value,
@@ -37,6 +38,7 @@ class FluteProviderWidget<T extends FluteProviderBase>
           key: key,
           lazy: lazy,
           startListening: _startListening,
+          updateShouldNotify: updateShouldNotify,
         );
 
   static void _dispose(BuildContext _, FluteProviderBase? notifier) =>
