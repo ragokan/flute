@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 class FluteFormProvider extends FluteProviderBase {
   final List<FluteFormField> _fields = [];
 
-  FluteFormProvider() {
-    print('Created a form provider');
-  }
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
-  void add(FluteFormField field) {
-    _fields.add(field);
-    print('Added a new field with ${field.name}');
-  }
+  void hoppala() {}
+
+  late final FocusScopeNode focusNode;
+
+  void add(FluteFormField field) => _fields.add(field);
+  void remove(FluteFormField field) => _fields.remove(field);
 
   static FluteFormProvider of(BuildContext context, {bool listen = false}) =>
       Provider.of<FluteFormProvider>(context, listen: listen);
