@@ -2,19 +2,23 @@ import 'package:flutter/material.dart';
 
 import 'package:flute/flute.dart';
 
-class FluteTextField extends FluteFormField {
+class FluteTextField<T extends Object> extends FluteFormField {
   final String name;
+  final List<FluteValidator<T>> validators;
+  final bool validateOnChange;
 
-  FluteTextField(
+  const FluteTextField(
     this.name, {
     Key? key,
-  }) : super(key: ValueKey(name));
+    this.validators = const [],
+    this.validateOnChange = true,
+  }) : super(key: key);
 
   @override
-  _FluteTextFieldState createState() => _FluteTextFieldState();
+  _FluteTextFieldState<T> createState() => _FluteTextFieldState<T>();
 }
 
-class _FluteTextFieldState extends State<FluteTextField> {
+class _FluteTextFieldState<T extends Object> extends State<FluteTextField> {
   late final TextEditingController _textEditingController;
   late final FluteFormModel model;
 
@@ -23,9 +27,40 @@ class _FluteTextFieldState extends State<FluteTextField> {
 
   FluteFormProvider get _provider => FluteFormProvider.of(context);
 
+  bool _validate(Object value) {
+    var _result = true;
+    for (var validator in widget.validators) {
+      if (!validator.validate(value)) {
+        setState(() {
+          model.isValid = false;
+          errorText = validator.errorMessage;
+          _result = false;
+        });
+        break;
+      }
+    }
+    return _result;
+  }
+
   void _listener() {
-    model.isValid = false;
-    _provider.setFieldValue(model.name, _textEditingController.text);
+    final _value = () {
+      final _text = _textEditingController.text;
+      if (T is num) {
+        return _text.toNumber();
+      }
+      return _text;
+    }();
+
+    final _isValid = _validate(_value);
+    if (!_isValid) {
+      // ignore: invalid_use_of_protected_member
+      if (widget.validateOnChange && !_textEditingController.hasListeners) {
+        _textEditingController.addListener(() => _validate(_value));
+      }
+      return;
+    }
+
+    _provider.setFieldValue(model.name, _value);
   }
 
   @override

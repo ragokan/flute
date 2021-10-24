@@ -8,7 +8,7 @@ class FluteFormProvider extends FluteProviderBase {
 
   bool validate() {
     notifyListeners();
-    return !_fields.any((element) => !element.isValid);
+    return _fields.every((element) => element.isValid);
   }
 
   late final FocusScopeNode focusNode;
