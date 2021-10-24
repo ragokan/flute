@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flute/flute.dart';
 
 class FluteTextField extends FluteFormField {
-  FluteTextField({
+  final String name;
+
+  FluteTextField(
+    this.name, {
     Key? key,
-    required String name,
-  }) : super(key: key, name: name);
+  }) : super(key: ValueKey(name));
 
   @override
   _FluteTextFieldState createState() => _FluteTextFieldState();
@@ -14,26 +16,31 @@ class FluteTextField extends FluteFormField {
 
 class _FluteTextFieldState extends State<FluteTextField> {
   late final TextEditingController _textEditingController;
+  late final FluteFormModel model;
+
+  String? errorText;
+  void setErrorText([String? text]) => setState(() => errorText = text);
 
   FluteFormProvider get _provider => FluteFormProvider.of(context);
 
   void _listener() {
-    // firstly validate
-    _provider.setFieldValue(widget.model.name, _textEditingController.text);
+    model.isValid = false;
+    _provider.setFieldValue(model.name, _textEditingController.text);
   }
 
   @override
   void initState() {
     super.initState();
-    widget.onCreate(context);
     _textEditingController = TextEditingController();
+    model = FluteFormModel(name: widget.name, field: widget);
+    FluteFormProvider.of(context).add(model);
     _provider.addListener(_listener);
   }
 
   @override
   void dispose() {
     _textEditingController.dispose();
-    widget.onDispose(context);
+    FluteFormProvider.of(context).remove(model);
     _provider.removeListener(_listener);
     super.dispose();
   }
@@ -42,6 +49,9 @@ class _FluteTextFieldState extends State<FluteTextField> {
   Widget build(BuildContext context) {
     return TextField(
       controller: _textEditingController,
+      decoration: InputDecoration(
+        errorText: errorText,
+      ),
     );
   }
 }

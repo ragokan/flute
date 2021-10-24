@@ -2,24 +2,25 @@ import 'package:flute/flute.dart';
 import 'package:flutter/material.dart';
 
 class FluteFormProvider extends FluteProviderBase {
-  final List<FluteFormField> _fields = [];
+  final List<FluteFormModel> _fields = [];
 
   late final Map<String, Object?> _values;
 
-  void validate() {
+  bool validate() {
     notifyListeners();
+    return !_fields.any((element) => !element.isValid);
   }
 
   late final FocusScopeNode focusNode;
 
-  void add(FluteFormField field) {
+  void add(FluteFormModel field) {
     _fields.add(field);
-    _values[field.model.name] = null;
+    _values[field.name] = null;
   }
 
-  void remove(FluteFormField field) {
+  void remove(FluteFormModel field) {
     _fields.remove(field);
-    _values.remove(field.model.name);
+    _values.remove(field.name);
   }
 
   void setFieldValue<T extends Object?>(String key, T? value) {
