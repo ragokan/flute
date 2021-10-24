@@ -6,6 +6,8 @@ class FluteFormProvider extends FluteProviderBase {
 
   final Map<String, Object?> _values = {};
 
+  Map<String, Object?> get values => _values;
+
   bool validate() {
     notifyListeners();
     return _fields.every((element) => element.isValid);
