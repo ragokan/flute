@@ -6,12 +6,14 @@ class FluteTextField<T extends Object> extends FluteFormField {
   final String name;
   final List<FluteValidator<T>> validators;
   final bool validateOnChange;
+  final TextInputAction? textInputAction;
 
   const FluteTextField(
     this.name, {
     Key? key,
     this.validators = const [],
     this.validateOnChange = true,
+    this.textInputAction,
   }) : super(key: key);
 
   @override
@@ -84,6 +86,7 @@ class _FluteTextFieldState<T extends Object> extends State<FluteTextField> {
   Widget build(BuildContext context) {
     return TextField(
       controller: _textEditingController,
+      textInputAction: widget.textInputAction ?? TextInputAction.next,
       decoration: InputDecoration(
         errorText: errorText,
       ),

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class FluteFormProvider extends FluteProviderBase {
   final List<FluteFormModel> _fields = [];
 
-  late final Map<String, Object?> _values;
+  final Map<String, Object?> _values = {};
 
   bool validate() {
     notifyListeners();
