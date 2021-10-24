@@ -1,9 +1,10 @@
+import 'package:flute/src/flute_forms/flute_form_model.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flute/flute.dart';
 
 abstract class FluteFormField extends StatefulWidget {
-  final String name;
+  final FluteFormModel model;
 
   void onCreate(BuildContext context) =>
       FluteFormProvider.of(context).add(this);
@@ -11,8 +12,9 @@ abstract class FluteFormField extends StatefulWidget {
   void onDispose(BuildContext context) =>
       FluteFormProvider.of(context).remove(this);
 
-  const FluteFormField({
+  FluteFormField({
     Key? key,
-    required this.name,
-  }) : super(key: key);
+    required String name,
+  })  : model = FluteFormModel(name: name),
+        super(key: key);
 }
