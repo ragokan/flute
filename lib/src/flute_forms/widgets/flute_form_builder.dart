@@ -2,7 +2,7 @@ import 'package:flute/flute.dart';
 import 'package:flutter/material.dart';
 
 typedef _FormBuilder = Widget Function(
-    FluteFormProvider provider, BuildContext context, FocusScopeNode node);
+    BuildContext context, FluteFormProvider provider, FocusScopeNode node);
 
 class FluteFormBuilder extends StatefulWidget {
   FluteFormBuilder({
@@ -28,6 +28,6 @@ class _FluteFormBuilderState extends State<FluteFormBuilder> {
   Widget build(BuildContext context) => FluteProviderWidget.value(
         value: fluteFormProvider,
         builder: (ctx, _) =>
-            widget.builder(fluteFormProvider, ctx, FocusScope.of(ctx)),
+            widget.builder(ctx, fluteFormProvider, FocusScope.of(ctx)),
       );
 }
