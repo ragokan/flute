@@ -2,6 +2,7 @@ import 'package:flute/src/flute_utilities/flute_custom_stream.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flute/flute.dart';
+import 'package:flutter/services.dart';
 
 class FluteTextField<T extends Object> extends FluteFormField {
   final String name;
@@ -9,6 +10,14 @@ class FluteTextField<T extends Object> extends FluteFormField {
   final bool validateOnChange;
   final TextInputAction? textInputAction;
   final TextInputType? textInputType;
+  final String? label;
+  final String? helperText;
+  final String? suffixText;
+  final String? hintText;
+  final String? prefixText;
+  final bool? obscureText;
+  final int? maxLines;
+  final int? minLines;
 
   const FluteTextField(
     this.name, {
@@ -17,6 +26,14 @@ class FluteTextField<T extends Object> extends FluteFormField {
     this.validateOnChange = true,
     this.textInputAction,
     this.textInputType,
+    this.label,
+    this.helperText,
+    this.suffixText,
+    this.hintText,
+    this.prefixText,
+    this.obscureText,
+    this.maxLines,
+    this.minLines,
   }) : super(key: key);
 
   @override
@@ -67,7 +84,7 @@ class _FluteTextFieldState<T extends Object> extends State<FluteTextField<T>> {
   void _listener() {
     if (!_validate()) {
       if (widget.validateOnChange) {
-        _textEditingController.stream.listenSingle((_) {
+        _textEditingController.stream.listenIfHasNoListeners((_) {
           _validate();
         });
       }
@@ -95,12 +112,22 @@ class _FluteTextFieldState<T extends Object> extends State<FluteTextField<T>> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      obscureText: widget.obscureText ?? false,
+      maxLines: widget.maxLines ?? 1,
+      minLines: widget.minLines,
       controller: _textEditingController,
       textInputAction: widget.textInputAction ?? TextInputAction.next,
+      inputFormatters:
+          T == num ? [FilteringTextInputFormatter.digitsOnly] : null,
       keyboardType:
           widget.textInputType ?? (T == num ? TextInputType.number : null),
       decoration: InputDecoration(
         errorText: errorText,
+        hintText: widget.hintText,
+        labelText: widget.label,
+        helperText: widget.helperText,
+        suffixText: widget.suffixText,
+        prefixText: widget.prefixText,
       ),
     );
   }
