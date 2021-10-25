@@ -11,7 +11,7 @@ mixin FluteFunctions {
   /// Example
   ///
   /// ```dart
-  /// Flute.setTimeout(5, () => print('5 second passed'));
+  /// Flute.setTimeout(5, () => debugPrint('5 second passed'));
   /// ```
   Timer setTimeout(Duration duration, Function callback) =>
       Timer(duration, () => callback());
@@ -25,7 +25,7 @@ mixin FluteFunctions {
   ///
   /// ```dart
   /// final stopInterval = Flute.setInterval(5, () {
-  ///   print('I will run every 5 seconds');
+  ///   debugPrint('I will run every 5 seconds');
   /// });
   /// Flute.setTimeout(20, stopInterval);
   /// ```

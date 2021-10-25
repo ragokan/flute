@@ -10,11 +10,7 @@ class FluteTextField<T extends Object> extends FluteFormField {
   final bool validateOnChange;
   final TextInputAction? textInputAction;
   final TextInputType? textInputType;
-  final String? label;
-  final String? helperText;
-  final String? suffixText;
-  final String? hintText;
-  final String? prefixText;
+  final InputDecoration inputDecoration;
   final bool? obscureText;
   final int? maxLines;
   final int? minLines;
@@ -26,11 +22,7 @@ class FluteTextField<T extends Object> extends FluteFormField {
     this.validateOnChange = true,
     this.textInputAction,
     this.textInputType,
-    this.label,
-    this.helperText,
-    this.suffixText,
-    this.hintText,
-    this.prefixText,
+    this.inputDecoration = const InputDecoration(),
     this.obscureText,
     this.maxLines,
     this.minLines,
@@ -121,14 +113,7 @@ class _FluteTextFieldState<T extends Object> extends State<FluteTextField<T>> {
           T == num ? [FilteringTextInputFormatter.digitsOnly] : null,
       keyboardType:
           widget.textInputType ?? (T == num ? TextInputType.number : null),
-      decoration: InputDecoration(
-        errorText: errorText,
-        hintText: widget.hintText,
-        labelText: widget.label,
-        helperText: widget.helperText,
-        suffixText: widget.suffixText,
-        prefixText: widget.prefixText,
-      ),
+      decoration: widget.inputDecoration.copyWith(errorText: errorText),
     );
   }
 }

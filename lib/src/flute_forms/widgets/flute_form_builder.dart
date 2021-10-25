@@ -5,7 +5,7 @@ typedef _FormBuilder = Widget Function(
     BuildContext context, FluteFormProvider provider, FocusScopeNode node);
 
 class FluteFormBuilder extends StatefulWidget {
-  FluteFormBuilder({
+  const FluteFormBuilder({
     Key? key,
     required this.builder,
   }) : super(key: key);

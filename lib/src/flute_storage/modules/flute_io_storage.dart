@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 /// The FluteStorage implementation for io.
@@ -40,7 +41,7 @@ class ImplFluteStorage {
           : jsonDecode(stringData) ?? _emptyData;
     } on FormatException catch (error) {
       clearStorage();
-      print('An error happened in FluteStorage\n Error: ${error.message}');
+      debugPrint('An error happened in FluteStorage\n Error: ${error.message}');
       return _emptyData;
     }
   }
@@ -53,7 +54,7 @@ class ImplFluteStorage {
   /// Writes current data to the local storage.
   void write<T>(String key, T value) {
     if (!_isInitialized) {
-      return print('You have to init FluteStorage to use it.');
+      return debugPrint('You have to init FluteStorage to use it.');
     }
     _currentData[key] = value;
     _saveToIOStorage();

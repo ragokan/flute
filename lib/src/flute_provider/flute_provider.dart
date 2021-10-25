@@ -43,7 +43,7 @@ class FluteProvider<T> extends FluteProviderBase {
   /// ```dart
   /// final removeListener = counterProvider.listen((state) {
   ///   // This function is called whenever state changes.
-  ///   print(state);
+  ///   debugPrint(state);
   ///  });
   ///
   /// // Call removeListener whenever you finish your job, maybe on dispose.

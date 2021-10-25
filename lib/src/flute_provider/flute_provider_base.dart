@@ -10,7 +10,7 @@ class FluteProviderBase implements Listenable {
       try {
         listener();
       } catch (error) {
-        print('Error happened while updating the FluteProvider: $error');
+        debugPrint('Error happened while updating the FluteProvider: $error');
       }
     }
   }

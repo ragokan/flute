@@ -31,7 +31,7 @@ class _FluteStorage extends ImplFluteStorage {
   ///
   /// ```dart
   /// listen<int>('count',(int count) => {
-  ///   print('Count is changed to $count');
+  ///   debugPrint('Count is changed to $count');
   /// });
   /// ```
   VoidFunction listen<T>(

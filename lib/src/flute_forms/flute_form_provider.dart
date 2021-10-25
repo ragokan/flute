@@ -13,6 +13,11 @@ class FluteFormProvider extends FluteProviderBase {
     return _fields.every((element) => element.isValid);
   }
 
+  T readValue<T extends Object?>(String name) => _values[name] as T;
+
+  bool areEqual(String first, String second) =>
+      _values[first] == _values[second];
+
   void add(FluteFormModel field) {
     _fields.add(field);
     _values[field.name] = null;

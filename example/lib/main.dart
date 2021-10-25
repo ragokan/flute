@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flute/flute.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Material App',
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Material App Bar'),
+          title: const Text('Material App Bar'),
         ),
         body: Center(
           child: FluteFormBuilder(
@@ -26,17 +28,17 @@ class MyApp extends StatelessWidget {
                       StringValidators.min('Min', minLength: 4),
                     ],
                   ),
-                  FluteTextField<num>(
+                  const FluteTextField<num>(
                     'age',
                     textInputAction: TextInputAction.done,
                   ),
                   ElevatedButton(
                     onPressed: () {
                       final _isValid = provider.validate();
-                      print('Is valid: $_isValid');
-                      print(provider.values);
+                      debugPrint('Is valid: $_isValid');
+                      debugPrint(provider.values.toString());
                     },
-                    child: Text('Submit'),
+                    child: const Text('Submit'),
                   )
                 ],
               ),

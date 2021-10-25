@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 typedef _TCallback<T> = void Function(T value);
 
 class FluteCustomStream<T> {
@@ -9,7 +11,8 @@ class FluteCustomStream<T> {
       try {
         listener(value);
       } catch (error) {
-        print('Error happened while calling the listener: $listener - $error');
+        debugPrint(
+            'Error happened while calling the listener: $listener - $error');
       }
     }
   }
