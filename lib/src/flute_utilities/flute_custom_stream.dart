@@ -18,6 +18,11 @@ class FluteCustomStream<T> {
     _listeners.add(listener);
   }
 
+  void listenSingle(_TCallback listener) {
+    if (_listeners.isNotEmpty) return;
+    _listeners.add(listener);
+  }
+
   void removeListener(_TCallback listener) {
     _listeners.remove(listener);
   }
