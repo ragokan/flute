@@ -66,4 +66,6 @@ linter:
     - use_full_hex_values_for_flutter_colors
     - use_key_in_widget_constructors
 
-exclude: [example/**]
+analyzer:
+  exclude:
+    - example

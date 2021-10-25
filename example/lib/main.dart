@@ -1,48 +1,29 @@
-import 'package:flutter/material.dart';
-import 'package:flute/flute.dart';
+import 'dart:convert';
+import 'dart:io';
 
-void main() => runApp(const MyApp());
+import 'package:flute/flute.dart';
+import 'package:flutter/material.dart';
+
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Material App',
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Material App Bar'),
+          title: Text('Material App Bar'),
         ),
         body: Center(
-          child: FluteFormBuilder(
-            builder: (context, provider, _) => Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                children: [
-                  FluteTextField(
-                    'name',
-                    validateOnChange: true,
-                    validators: [
-                      StringValidators.required('Required'),
-                      StringValidators.min('Min', minLength: 4),
-                    ],
-                  ),
-                  const FluteTextField<num>(
-                    'age',
-                    textInputAction: TextInputAction.done,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      final _isValid = provider.validate();
-                      debugPrint('Is valid: $_isValid');
-                      debugPrint(provider.values.toString());
-                    },
-                    child: const Text('Submit'),
-                  )
-                ],
-              ),
-            ),
+          child: ElevatedButton(
+            onPressed: () async {
+              final response =
+                  await FluteApiProvider('jsonplaceholder.typicode.com')
+                      .post<Map>('/todos', body: {'title': 'hele hele'});
+              print(response);
+            },
+            child: Text('Hello World'),
           ),
         ),
       ),

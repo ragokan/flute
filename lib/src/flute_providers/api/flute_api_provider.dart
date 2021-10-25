@@ -1,108 +1,110 @@
-import 'package:dio/dio.dart';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+
 import '../../../flute.dart';
 
-abstract class FluteApiProvider {
-  String? token;
+class FluteApiProvider {
+  String? _token;
 
-  String? endPoint;
+  final String _endPoint;
 
-  VoidFunction? _removeListener;
+  late final VoidFunction _removeListener;
 
-  void onError(DioError error, ErrorInterceptorHandler handler) {
-    handler.next(error);
-  }
+  final void Function(Object error)? onError;
 
-  FluteApiProvider({this.endPoint}) {
+  FluteApiProvider(
+    this._endPoint, {
+    this.onError,
+  }) {
     _removeListener =
-        FluteStorage.listen<String>(kTokenKey, (key) => token = key);
+        FluteStorage.listen<String>(kTokenKey, (key) => _token = key);
   }
 
   void dispose() {
-    _removeListener?.call();
-    token = null;
-    endPoint = null;
+    _removeListener();
+    _token = null;
   }
 
-  Future<Response<T>> get<T>(
+  Future<T?> get<T>(
     String path, {
     Map<String, dynamic>? queryParameters,
-    Options? options,
+    Map<String, dynamic>? body,
   }) async =>
-      await _getDio().get(
-        path,
-        queryParameters: queryParameters,
-        options: options,
-      );
+      await _baseRequest('GET', path,
+          queryParameters: queryParameters, body: body);
 
-  Future<Response<T>> post<T>(
+  Future<T?> post<T>(
     String path, {
-    data,
+    Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
-    Options? options,
   }) async =>
-      await _getDio().post(
-        path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-      );
+      await _baseRequest('POST', path,
+          queryParameters: queryParameters, body: body);
 
-  Future<Response<T>> patch<T>(
+  Future<T?> patch<T>(
     String path, {
-    data,
+    Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
-    Options? options,
   }) async =>
-      await _getDio().patch(
-        path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-      );
+      await _baseRequest('PATCH', path,
+          queryParameters: queryParameters, body: body);
 
-  Future<Response<T>> put<T>(
+  Future<T?> put<T>(
     String path, {
-    data,
+    Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
-    Options? options,
   }) async =>
-      await _getDio().put(
-        path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-      );
+      await _baseRequest('PUT', path,
+          queryParameters: queryParameters, body: body);
 
-  Future<Response<T>> delete<T>(
+  Future<T?> delete<T>(
     String path, {
-    data,
+    Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
-    Options? options,
   }) async =>
-      await _getDio().delete(
-        path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
+      _baseRequest('DELETE', path,
+          queryParameters: queryParameters, body: body);
+
+  Future<T?> _baseRequest<T>(
+    String method,
+    String path, {
+    Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? body,
+  }) async {
+    try {
+      final _client = HttpClient();
+      final request = await _client.openUrl(
+        method,
+        Uri(
+          scheme: 'https',
+          host: _endPoint,
+          path: path,
+          queryParameters: queryParameters,
+        ),
       );
 
-  Dio _getDio() {
-    final _dio = Dio();
+      request.headers.set(
+          HttpHeaders.contentTypeHeader, 'application/json; charset=UTF-8');
 
-    if (token != null) {
-      _dio.options.headers['Authorization'] = token;
+      if (_token != null) {
+        request.headers.set('Authorization', _token!);
+      }
+
+      if (body != null) {
+        request.write(json.encode(body));
+      }
+
+      final val = await request.close();
+      final response =
+          await val.transform(utf8.decoder).transform(json.decoder).first;
+
+      _client.close();
+      return response as T;
+    } catch (error) {
+      debugPrint(error.toString());
+      onError?.call(error);
     }
-
-    if (endPoint != null) {
-      _dio.options.baseUrl = endPoint!;
-    }
-
-    _dio.interceptors.add(
-      InterceptorsWrapper(
-        onError: onError,
-      ),
-    );
-
-    return _dio;
   }
 }
