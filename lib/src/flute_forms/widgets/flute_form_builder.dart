@@ -13,10 +13,10 @@ class FluteFormBuilder extends StatefulWidget {
   final _FormBuilder builder;
 
   @override
-  _FluteFormBuilderState createState() => _FluteFormBuilderState();
+  FluteFormBuilderState createState() => FluteFormBuilderState();
 }
 
-class _FluteFormBuilderState extends State<FluteFormBuilder> {
+class FluteFormBuilderState extends State<FluteFormBuilder> {
   late final FluteFormProvider fluteFormProvider;
   @override
   void initState() {
@@ -25,9 +25,9 @@ class _FluteFormBuilderState extends State<FluteFormBuilder> {
   }
 
   @override
-  Widget build(BuildContext context) => FluteProviderWidget.value(
-        value: fluteFormProvider,
-        builder: (ctx, _) =>
-            widget.builder(ctx, fluteFormProvider, FocusScope.of(ctx)),
+  Widget build(BuildContext context) => widget.builder(
+        context,
+        fluteFormProvider,
+        FocusScope.of(context),
       );
 }

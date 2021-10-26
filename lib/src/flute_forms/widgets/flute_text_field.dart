@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 
 class FluteTextField<T extends Object> extends FluteFormField {
   final String name;
-  final List<FluteValidator<T>> validators;
+  final List<FluteValidator<T?>> validators;
   final bool validateOnChange;
   final TextInputAction? textInputAction;
   final TextInputType? textInputType;
@@ -39,20 +39,22 @@ class _FluteTextFieldState<T extends Object> extends State<FluteTextField<T>> {
   String? errorText;
   void setErrorText([String? text]) => setState(() => errorText = text);
 
-  FluteFormProvider get _provider => FluteFormProvider.of(context);
+  FluteFormProvider get _provider => context
+      .findAncestorStateOfType<FluteFormBuilderState>()!
+      .fluteFormProvider;
 
   bool _validate() {
     final _value = () {
       final _text = _textEditingController.text;
-      if (T is num) {
-        return _text.toNumber();
+      if (T == num) {
+        return _text.isNotEmpty ? _text.toNumber() : null;
       }
       return _text;
     }();
 
     var _result = true;
     for (var validator in widget.validators) {
-      if (!validator.validate(_value as T)) {
+      if (!validator.validate(_value as T?)) {
         setState(() {
           model.isValid = false;
           errorText = validator.errorMessage;
@@ -87,14 +89,14 @@ class _FluteTextFieldState<T extends Object> extends State<FluteTextField<T>> {
     super.initState();
     _textEditingController = _TextEditingController();
     model = FluteFormModel(name: widget.name, field: widget);
-    FluteFormProvider.of(context).add(model);
+    _provider.add(model);
     _provider.addListener(_listener);
   }
 
   @override
   void dispose() {
     _textEditingController.dispose();
-    FluteFormProvider.of(context).remove(model);
+    _provider.remove(model);
     _provider.removeListener(_listener);
     super.dispose();
   }
@@ -121,9 +123,7 @@ class _TextEditingController extends TextEditingController {
 
   @override
   set value(TextEditingValue newValue) {
-    if (value != newValue) {
-      stream.notifyListeners();
-    }
+    stream.notifyListeners();
     super.value = newValue;
   }
 

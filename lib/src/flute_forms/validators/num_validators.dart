@@ -6,11 +6,11 @@ abstract class NumberValidators extends FluteValidator<num?> {
   static _RequiredValidator required(String errorMessage) =>
       _RequiredValidator(errorMessage);
 
-  static _MinValidator min(String errorMessage, {required int minLength}) =>
-      _MinValidator(errorMessage, minLength);
+  static _MinValidator min(String errorMessage, {required int min}) =>
+      _MinValidator(errorMessage, min);
 
-  static _MaxValidator max(String errorMessage, {required int maxLength}) =>
-      _MaxValidator(errorMessage, maxLength);
+  static _MaxValidator max(String errorMessage, {required int max}) =>
+      _MaxValidator(errorMessage, max);
 
   static _EqualValidator equal(String errorMessage, {required int value}) =>
       _EqualValidator(errorMessage, value);
