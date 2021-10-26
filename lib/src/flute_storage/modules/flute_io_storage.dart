@@ -25,10 +25,10 @@ class ImplFluteStorage {
     final path = appDocDirectory.path;
     final slash = Platform.isWindows ? '\\' : '/';
     final dir = '$path$slash$storageName.fluteStorage';
+    _file = File(dir);
     if (!_file.existsSync()) {
       File(dir).createSync(recursive: true);
     }
-    _file = File(dir);
     _currentData = _getData();
   }
 
