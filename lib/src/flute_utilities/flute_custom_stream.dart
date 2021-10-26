@@ -1,9 +1,8 @@
+import 'package:flute/flute.dart';
 import 'package:flutter/material.dart';
 
-typedef _TCallback<T> = void Function();
-
-class FluteCustomStream<T> {
-  final List<_TCallback> _listeners = [];
+class CustomFluteStream {
+  final List<VoidFunction> _listeners = [];
 
   /// Notifies all listeners.
   void notifyListeners() {
@@ -17,16 +16,16 @@ class FluteCustomStream<T> {
     }
   }
 
-  void listen(_TCallback listener) {
+  void listen(VoidFunction listener) {
     _listeners.add(listener);
   }
 
-  void listenIfHasNoListeners(_TCallback listener) {
+  void listenIfHasNoListeners(VoidFunction listener) {
     if (_listeners.isNotEmpty) return;
     _listeners.add(listener);
   }
 
-  void removeListener(_TCallback listener) {
+  void removeListener(VoidFunction listener) {
     _listeners.remove(listener);
   }
 
