@@ -76,9 +76,7 @@ class _FluteTextFieldState<T extends Object> extends State<FluteTextField<T>> {
   void _listener() {
     if (!_validate()) {
       if (widget.validateOnChange) {
-        _textEditingController.stream.listenIfHasNoListeners((_) {
-          _validate();
-        });
+        _textEditingController.stream.listenIfHasNoListeners(_validate);
       }
       return;
     }
@@ -124,7 +122,7 @@ class _TextEditingController extends TextEditingController {
   @override
   set value(TextEditingValue newValue) {
     if (value != newValue) {
-      stream.notifyListeners(null);
+      stream.notifyListeners();
     }
     super.value = newValue;
   }

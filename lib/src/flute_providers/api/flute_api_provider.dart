@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 import '../../../flute.dart';
 
+// Response model?
+// Belki web api?
 class FluteApiProvider {
   String? _token;
 

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-typedef _TCallback<T> = void Function();
+typedef _TCallback<T> = void Function(T? value);
 
-class FluteCustomStream<T> {
-  final List<_TCallback> _listeners = [];
+class FluteCustomValueStream<T> {
+  final List<_TCallback<T>> _listeners = [];
 
   /// Notifies all listeners.
-  void notifyListeners() {
+  void notifyListeners([T? value]) {
     for (var listener in _listeners) {
       try {
-        listener();
+        listener(value);
       } catch (error) {
         debugPrint(
             'Error happened while calling the listener: $listener - $error');
@@ -17,12 +17,7 @@ class FluteCustomStream<T> {
     }
   }
 
-  void listen(_TCallback listener) {
-    _listeners.add(listener);
-  }
-
-  void listenIfHasNoListeners(_TCallback listener) {
-    if (_listeners.isNotEmpty) return;
+  void listen(_TCallback<T> listener) {
     _listeners.add(listener);
   }
 
