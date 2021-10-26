@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 
 /// The FluteStorage implementation for io.
 class ImplFluteStorage {
-  final Map<String, dynamic> _emptyData = {};
+  Map<String, dynamic> get _emptyData => {};
 
   Map<String, dynamic> _currentData = {};
   String get _encodedData => jsonEncode(_currentData);
@@ -25,14 +25,16 @@ class ImplFluteStorage {
     final path = appDocDirectory.path;
     final slash = Platform.isWindows ? '\\' : '/';
     final dir = '$path$slash$storageName.fluteStorage';
-    File(dir).createSync(recursive: true);
+    if (!_file.existsSync()) {
+      File(dir).createSync(recursive: true);
+    }
     _file = File(dir);
     _currentData = _getData();
   }
 
   Map<String, dynamic> _getData() {
     try {
-      var stringData = _file.readAsStringSync();
+      final stringData = _file.readAsStringSync();
       return stringData.trim() == ''
           ? _emptyData
           : jsonDecode(stringData) ?? _emptyData;
@@ -51,34 +53,33 @@ class ImplFluteStorage {
   /// Writes current data to the local storage.
   void write<T>(String key, T value) {
     _currentData[key] = value;
-    _saveToIOStorage();
+    return _saveToIOStorage();
   }
 
   /// Writes multiple data to the local storage.
   void writeMulti(Map<String, dynamic> data) {
     data.forEach((key, value) => _currentData[key] = value);
-    _saveToIOStorage();
+    return _saveToIOStorage();
   }
 
   /// Deletes a key from the storage.
   void removeKey(String key) {
     _currentData.remove(key);
-    _saveToIOStorage();
+    return _saveToIOStorage();
   }
 
   /// Deletes a key from the storage.
   void removeKeys(List<String> keys) {
     keys.forEach((key) => _currentData.remove(key));
-    _saveToIOStorage();
+    return _saveToIOStorage();
   }
 
   /// Clear the data of local storage.
   void clearStorage() {
-    _file.writeAsStringSync(jsonEncode(_emptyData));
+    _currentData = _emptyData;
+    return _saveToIOStorage();
   }
 
   /// Delete the storage permanently.
-  void deleteStorage() {
-    _file.deleteSync();
-  }
+  void deleteStorage() => _file.delete();
 }
