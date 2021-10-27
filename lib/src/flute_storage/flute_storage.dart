@@ -2,6 +2,7 @@
 // What it does it, if we have dart.library.io, which doesnt exists on web
 // we import storage, else we import web.
 import 'package:flute/flute.dart';
+import 'package:flutter/material.dart';
 
 import 'modules/flute_web_storage.dart'
     if (dart.library.io) 'modules/flute_io_storage.dart';
@@ -11,18 +12,23 @@ import 'modules/storage_listener_model.dart';
 ///
 /// The [ImplFluteStorage] depends on the import above.
 class _FluteStorage extends ImplFluteStorage {
-  final _listeners = <StorageListener>{};
+  final _listeners = <StorageListener>[];
 
   /// [_notify] is the method that notifies all listeners.
-  void _notify([String? key]) => _listeners.forEach(
-        (element) {
-          if (key == null) {
-            element.callback(null);
-          } else if (element.key == key) {
-            element.callback(read(key));
-          }
-        },
-      );
+  void _notify([String? key]) {
+    for (var listener in _listeners) {
+      try {
+        if (key == null) {
+          listener.callback(null);
+        } else if (listener.key == key) {
+          listener.callback(read(key));
+        }
+      } catch (e) {
+        debugPrint(
+            'Error happened while notifying the FluteStorageListener, details: $e');
+      }
+    }
+  }
 
   /// [listen] gives you a callback that called whenever the [key]
   /// you declared changes/creates.
