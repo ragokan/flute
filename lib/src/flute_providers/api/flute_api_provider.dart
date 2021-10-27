@@ -1,25 +1,20 @@
-import 'dart:convert';
-import 'dart:io';
-
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../../../flute.dart';
 
-// Response model?
-// Belki web api?
-class FluteApiProvider {
+abstract class FluteApiProvider {
   String? _token;
 
   final String _endPoint;
 
   late final VoidFunction _removeListener;
 
-  final void Function(Object error)? onError;
+  @protected
+  void onError(DioError error, ErrorInterceptorHandler handler) =>
+      handler.next(error);
 
-  FluteApiProvider(
-    this._endPoint, {
-    this.onError,
-  }) {
+  FluteApiProvider(this._endPoint) {
     _removeListener =
         FluteStorage.listen<String>(kTokenKey, (key) => _token = key);
   }
@@ -29,7 +24,7 @@ class FluteApiProvider {
     _token = null;
   }
 
-  Future<T?> get<T>(
+  Future<Response<T>> get<T>(
     String path, {
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? body,
@@ -37,7 +32,7 @@ class FluteApiProvider {
       await _baseRequest('GET', path,
           queryParameters: queryParameters, body: body);
 
-  Future<T?> post<T>(
+  Future<Response<T>> post<T>(
     String path, {
     Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
@@ -45,7 +40,7 @@ class FluteApiProvider {
       await _baseRequest('POST', path,
           queryParameters: queryParameters, body: body);
 
-  Future<T?> patch<T>(
+  Future<Response<T>> patch<T>(
     String path, {
     Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
@@ -53,7 +48,7 @@ class FluteApiProvider {
       await _baseRequest('PATCH', path,
           queryParameters: queryParameters, body: body);
 
-  Future<T?> put<T>(
+  Future<Response<T>> put<T>(
     String path, {
     Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
@@ -61,7 +56,7 @@ class FluteApiProvider {
       await _baseRequest('PUT', path,
           queryParameters: queryParameters, body: body);
 
-  Future<T?> delete<T>(
+  Future<Response<T>> delete<T>(
     String path, {
     Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
@@ -69,44 +64,29 @@ class FluteApiProvider {
       _baseRequest('DELETE', path,
           queryParameters: queryParameters, body: body);
 
-  Future<T?> _baseRequest<T>(
+  @protected
+  Future<Response<T>> _baseRequest<T>(
     String method,
     String path, {
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? body,
   }) async {
-    try {
-      final _client = HttpClient();
-      final request = await _client.openUrl(
-        method,
-        Uri(
-          scheme: 'https',
-          host: _endPoint,
-          path: path,
-          queryParameters: queryParameters,
-        ),
-      );
+    final _dio = Dio();
 
-      request.headers.set(
-          HttpHeaders.contentTypeHeader, 'application/json; charset=UTF-8');
+    _dio.interceptors.add(InterceptorsWrapper(onError: onError));
 
-      if (_token != null) {
-        request.headers.set('Authorization', _token!);
-      }
+    final _response = await _dio.fetch<T>(
+      RequestOptions(
+        method: method,
+        path: path,
+        data: body,
+        queryParameters: queryParameters,
+        headers: {'Authorization': _token},
+        baseUrl: _endPoint,
+      ),
+    );
 
-      if (body != null) {
-        request.write(json.encode(body));
-      }
-
-      final val = await request.close();
-      final response =
-          await val.transform(utf8.decoder).transform(json.decoder).first;
-
-      _client.close();
-      return response as T;
-    } catch (error) {
-      debugPrint(error.toString());
-      onError?.call(error);
-    }
+    _dio.close();
+    return _response;
   }
 }
