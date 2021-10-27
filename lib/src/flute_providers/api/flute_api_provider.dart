@@ -3,26 +3,13 @@ import 'package:flutter/material.dart';
 
 import '../../../flute.dart';
 
-abstract class FluteApiProvider {
-  String? _token;
+class FluteApiProvider {
+  final String? _endPoint;
 
-  final String _endPoint;
+  final void Function(DioError error, ErrorInterceptorHandler handler)?
+      _onError;
 
-  late final VoidFunction _removeListener;
-
-  @protected
-  void onError(DioError error, ErrorInterceptorHandler handler) =>
-      handler.next(error);
-
-  FluteApiProvider(this._endPoint) {
-    _removeListener =
-        FluteStorage.listen<String>(kTokenKey, (key) => _token = key);
-  }
-
-  void dispose() {
-    _removeListener();
-    _token = null;
-  }
+  const FluteApiProvider([this._endPoint, this._onError]);
 
   Future<Response<T>> get<T>(
     String path, {
@@ -72,8 +59,9 @@ abstract class FluteApiProvider {
     Map<String, dynamic>? body,
   }) async {
     final _dio = Dio();
-
-    _dio.interceptors.add(InterceptorsWrapper(onError: onError));
+    if (_onError != null) {
+      _dio.interceptors.add(InterceptorsWrapper(onError: _onError));
+    }
 
     final _response = await _dio.fetch<T>(
       RequestOptions(
@@ -81,7 +69,7 @@ abstract class FluteApiProvider {
         path: path,
         data: body,
         queryParameters: queryParameters,
-        headers: {'Authorization': _token},
+        headers: {'Authorization': FluteStorage.read(kTokenKey)},
         baseUrl: _endPoint,
       ),
     );
