@@ -4,7 +4,7 @@ typedef _UpdateCallback<T> = T Function(T state);
 typedef _ListenerCallback<T> = void Function(T state);
 
 /// {@macro flute_provider}
-class FluteProvider<T> extends FluteProviderBase {
+class FluteProvider<T> extends FluteNotifier {
   /// {@macro flute_provider}
   FluteProvider(this._state);
 

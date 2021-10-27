@@ -1,6 +1,6 @@
 import 'package:flute/flute.dart';
 
-mixin LoadingProvider on FluteProviderBase {
+mixin LoadingProvider on FluteNotifier {
   bool get isLoading => _isLoading ?? false;
   bool? _isLoading;
 

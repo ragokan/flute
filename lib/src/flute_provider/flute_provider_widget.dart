@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../flute.dart';
 
 /// You can use this widget with MultiProvider or alone.
-class FluteProviderWidget<T extends FluteProviderBase>
-    extends InheritedProvider<T> {
+class FluteProviderWidget<T extends FluteNotifier>
+    extends ChangeNotifierProvider<T> {
   /// Create method creates the instance.
   FluteProviderWidget({
     Key? key,
@@ -15,10 +15,8 @@ class FluteProviderWidget<T extends FluteProviderBase>
   }) : super(
           key: key,
           create: create,
-          dispose: _dispose,
           lazy: lazy,
           builder: builder,
-          startListening: _startListening,
           child: child,
         );
 
@@ -27,28 +25,12 @@ class FluteProviderWidget<T extends FluteProviderBase>
   FluteProviderWidget.value({
     Key? key,
     required T value,
-    bool? lazy,
     TransitionBuilder? builder,
-    UpdateShouldNotify<T>? updateShouldNotify,
     Widget? child,
   }) : super.value(
           value: value,
           builder: builder,
           child: child,
           key: key,
-          lazy: lazy,
-          startListening: _startListening,
-          updateShouldNotify: updateShouldNotify,
         );
-
-  static void _dispose(BuildContext _, FluteProviderBase? notifier) =>
-      notifier?.dispose();
-
-  static VoidCallback _startListening(
-    InheritedContext e,
-    FluteProviderBase? value,
-  ) {
-    value?.addListener(e.markNeedsNotifyDependents);
-    return () => value?.removeListener(e.markNeedsNotifyDependents);
-  }
 }
