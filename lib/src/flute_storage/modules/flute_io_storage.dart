@@ -45,7 +45,8 @@ class ImplFluteStorage {
     }
   }
 
-  void _saveToIOStorage() => _file.writeAsStringSync(_encodedData);
+  void _saveToIOStorage() =>
+      scheduleMicrotask(() => _file.writeAsStringSync(_encodedData));
 
   /// Get data from local storage.
   T? read<T>(String key) => _currentData[key];
