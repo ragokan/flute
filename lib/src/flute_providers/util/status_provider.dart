@@ -16,10 +16,12 @@ mixin StatusProvider<X extends FluteProvider<S>, S> on FluteProvider<S> {
 
   Status get status => _status;
 
-  void setStatus(Status newStatus) {
+  void setStatus(Status newStatus, {bool shouldNotify = true}) {
     if (_status == newStatus) return;
     _status = newStatus;
-    notifyListeners();
+    if (shouldNotify) {
+      notifyListeners();
+    }
   }
 
   T when<T>({
