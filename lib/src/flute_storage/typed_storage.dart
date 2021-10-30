@@ -1,8 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:collection/collection.dart';
 
-typedef _FromMap<T> = T Function(dynamic e);
-typedef _ToMap<T> = dynamic Function(T e);
+typedef _FromMap<T> = T Function(Map<String, dynamic> e);
+typedef _ToMap<T> = Map<String, dynamic> Function(T e);
 
 class TypedConverter<T> {
   final _ToMap<T> toMap;
@@ -24,10 +23,10 @@ class TypedStorage<T> {
     return TypedStorage<T>(_box, converter);
   }
 
-  void removeWhere(bool test(T element)) {
+  Future<void> removeWhere(bool test(T element)) async {
     for (var entry in _box.toMap().entries) {
       if (test(_typedConverter.fromMap(entry.value))) {
-        _box.delete(entry);
+        await _box.delete(entry.key);
       }
     }
   }
@@ -35,26 +34,26 @@ class TypedStorage<T> {
   List<T> where(bool test(T element)) {
     final _entries = <T>[];
     for (var entry in _box.values) {
-      if (test(_typedConverter.fromMap(entry))) {
-        _entries.add(entry);
+      final _generated = _typedConverter.fromMap(entry);
+      if (test(_generated)) {
+        _entries.add(_generated);
       }
     }
     return _entries;
   }
 
   void forEach(void action(T element)) =>
-      _box.values.forEach(action as void Function(dynamic));
-
-  T? firstWhereOrNull(bool test(T element)) =>
-      _box.values.firstWhereOrNull(test as bool Function(dynamic));
+      _box.values.forEach((e) => action(_typedConverter.fromMap(e)));
 
   Future<void> add(T data) async => await _box.add(_typedConverter.toMap(data));
 
   Future<void> addAll(List<T> data) async =>
       await _box.addAll(data.map(_typedConverter.toMap));
 
-  List<T> get values =>
-      _box.values.map<T>(_typedConverter.fromMap).toList().cast<T>();
+  List<T> get values => _box.values
+      .map<T>((v) => _typedConverter.fromMap(Map<String, dynamic>.from(v)))
+      .toList()
+      .cast<T>();
 
   List<T> paginatedValues({
     int? startKey,
@@ -62,7 +61,7 @@ class TypedStorage<T> {
   }) =>
       _box
           .valuesBetween(startKey: startKey, endKey: endKey)
-          .map<T>(_typedConverter.fromMap)
+          .map<T>((v) => _typedConverter.fromMap(Map<String, dynamic>.from(v)))
           .toList()
           .cast<T>();
 
