@@ -2,34 +2,10 @@
 // What it does it, if we have dart.library.io, which doesnt exists on web
 // we import storage, else we import web.
 import 'package:flute/flute.dart';
-import 'package:flutter/material.dart';
-
-import 'modules/flute_web_storage.dart'
-    if (dart.library.io) 'modules/flute_io_storage.dart';
-import 'modules/storage_listener_model.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 /// The implementation of [FluteStorage]
-///
-/// The [ImplFluteStorage] depends on the import above.
-class _FluteStorage extends ImplFluteStorage {
-  final _listeners = <StorageListener>[];
-
-  /// [_notify] is the method that notifies all listeners.
-  void _notify([String? key]) {
-    for (var listener in _listeners) {
-      try {
-        if (key == null) {
-          listener.callback(null);
-        } else if (listener.key == key) {
-          listener.callback(read(key));
-        }
-      } catch (e) {
-        debugPrint(
-            'Error happened while notifying the FluteStorageListener, details: $e');
-      }
-    }
-  }
-
+class _FluteStorage {
   /// [listen] gives you a callback that called whenever the [key]
   /// you declared changes/creates.
   ///
@@ -42,16 +18,22 @@ class _FluteStorage extends ImplFluteStorage {
   /// ```
   VoidFunction listen<T>(
     String key,
-    KeyCallback<T> callback, {
+    void Function(T? value) callback, {
     bool callImmediately = true,
   }) {
-    final listener = StorageListener<T>(key: key, callback: callback);
-    _listeners.add(listener);
+    final _stream = _box.watch(key: key).listen((e) => callback(e.value));
+
     if (callImmediately) {
-      listener.callback(read(key));
+      callback(read<T>(key));
     }
-    return () => _listeners.remove(listener);
+
+    return _stream.cancel;
   }
+
+  late final Box _box;
+
+  /// Returns true if the storage contains that key.
+  bool contains(String key) => _box.containsKey(key);
 
   /// [init] function is required to start [FluteStorage]
   ///
@@ -63,12 +45,13 @@ class _FluteStorage extends ImplFluteStorage {
   /// ```dart
   ///void main(List<String> arguments) {
   ///  await FluteStorage.init();
-  /// // Rest of your code
   ///}
   ///```
-  @override
-  Future<void> init({String storageName = 'flute'}) async =>
-      await super.init(storageName: storageName.trim());
+  Future<void> init([String boxName = 'flute', String? subDir]) async {
+    await Hive.initFlutter(subDir);
+    await Hive.openBox(boxName);
+    _box = Hive.box(boxName);
+  }
 
   /// Reads the storage, if there are any match with the key, it returns
   /// the value of it. If there are no match, it will return null.
@@ -81,8 +64,7 @@ class _FluteStorage extends ImplFluteStorage {
   /// ```dart
   /// final myName = FluteStorage.read<String>('myName');
   /// ```
-  @override
-  T? read<T>(String key) => super.read(key);
+  T? read<T>(String key) => _box.get(key);
 
   /// Writes a value to the storage with a key.
   ///
@@ -91,11 +73,8 @@ class _FluteStorage extends ImplFluteStorage {
   /// ```dart
   /// FluteStorage.write<String>('myName','Flute');
   /// ```
-  @override
-  void write<T>(String key, T value) {
-    super.write(key, value);
-    _notify(key);
-  }
+  Future<void> write<T>(String key, T value) async =>
+      await _box.put(key, value);
 
   /// Writes multiple data to the local storage.
   ///
@@ -104,11 +83,8 @@ class _FluteStorage extends ImplFluteStorage {
   /// ```dart
   /// FluteStorage.writeMulti({'myName' : 'Flute', 'flute' : 'best'});
   /// ```
-  @override
-  void writeMulti(Map<String, dynamic> data) {
-    super.writeMulti(data);
-    data.keys.forEach(_notify);
-  }
+  Future<void> writeMulti(Map<String, dynamic> data) async =>
+      await _box.putAll(data);
 
   /// Writes a value to the storage with a key if the key's value is null.
   ///
@@ -117,11 +93,7 @@ class _FluteStorage extends ImplFluteStorage {
   /// ```dart
   /// FluteStorage.removeKey('myName');
   /// ```
-  @override
-  void removeKey(String key) {
-    super.removeKey(key);
-    _notify(key);
-  }
+  Future<void> removeKey(String key) async => await _box.delete(key);
 
   /// Writes a value to the storage with a key if the key's value is null.
   ///
@@ -130,26 +102,15 @@ class _FluteStorage extends ImplFluteStorage {
   /// ```dart
   /// FluteStorage.removeKeys(['myName', 'flute']);
   /// ```
-  @override
-  void removeKeys(List<String> keys) {
-    super.removeKeys(keys);
-    keys.forEach(_notify);
-  }
+  Future<void> removeKeys(List<String> keys) async =>
+      await _box.deleteAll(keys);
 
   /// Deletes all keys and values from the storage, the file
   /// will still stay at its location.
-  @override
-  void clearStorage() {
-    super.clearStorage();
-    _notify();
-  }
+  Future<void> clearStorage() async => await _box.clear();
 
-  /// Deletes the file and data completely.
-  @override
-  void deleteStorage() {
-    super.deleteStorage();
-    _notify();
-  }
+  /// Closes the storage.
+  Future<void> dispose() async => await _box.close();
 }
 
 /// [FluteStorage] is a local storage implementation for *Flute*.
