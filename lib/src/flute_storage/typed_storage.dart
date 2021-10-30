@@ -2,7 +2,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:collection/collection.dart';
 
 typedef _FromMap<T> = T Function(Map<String, Object> e);
-typedef _ToMap<T> = Map<String, dynamic> Function(T e);
+typedef _ToMap<T> = Map<String, Object> Function(T e);
 
 class TypedConverter<T> {
   final _ToMap<T> toMap;
@@ -13,12 +13,12 @@ class TypedConverter<T> {
 
 class TypedStorage<T> {
   final Box _box;
-  final TypedConverter _typedConverter;
+  final TypedConverter<T> _typedConverter;
   TypedStorage(this._box, this._typedConverter);
 
   static Future<TypedStorage<T>> openBox<T>(
     String boxName, {
-    required TypedConverter converter,
+    required TypedConverter<T> converter,
   }) async {
     final _box = await Hive.openBox(boxName);
     return TypedStorage<T>(_box, converter);
