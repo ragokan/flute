@@ -1,8 +1,8 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:collection/collection.dart';
 
-typedef _FromMap<T> = T Function(Map<String, Object> e);
-typedef _ToMap<T> = Map<String, Object> Function(T e);
+typedef _FromMap<T> = T Function(Map<String, dynamic> e);
+typedef _ToMap<T> = Map<String, dynamic> Function(T e);
 
 class TypedConverter<T> {
   final _ToMap<T> toMap;
