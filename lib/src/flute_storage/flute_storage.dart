@@ -1,6 +1,3 @@
-// I learned this usage from https://github.com/gskinnerTeam/flutter-universal-platform/blob/master/lib/universal_platform.dart
-// What it does it, if we have dart.library.io, which doesnt exists on web
-// we import storage, else we import web.
 import 'package:flute/flute.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -109,8 +106,19 @@ class _FluteStorage {
   /// will still stay at its location.
   Future<void> clearStorage() async => await _box.clear();
 
+  /// Deletes everything and the file.
+  Future<void> deleteStorage() async => await Hive.deleteBoxFromDisk(_box.name);
+
   /// Closes the storage.
   Future<void> dispose() async => await _box.close();
+
+  /// Creates sub box instances
+  Future<_FluteStorage> openCustomBox(String boxName) async =>
+      _FluteCustomStorage()._openAndGet(boxName);
+
+  /// Creates sub box instances
+  _FluteStorage customBox(String boxName) =>
+      _FluteCustomStorage()._get(boxName);
 }
 
 /// [FluteStorage] is a local storage implementation for *Flute*.
@@ -124,3 +132,16 @@ class _FluteStorage {
 /// ```
 // ignore: non_constant_identifier_names
 final _FluteStorage FluteStorage = _FluteStorage();
+
+class _FluteCustomStorage extends _FluteStorage {
+  _FluteStorage _get(String boxName) {
+    _box = Hive.box(boxName);
+    return this;
+  }
+
+  Future<_FluteStorage> _openAndGet(String boxName) async {
+    await Hive.openBox(boxName);
+    _box = Hive.box(boxName);
+    return this;
+  }
+}
