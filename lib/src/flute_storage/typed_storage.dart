@@ -1,8 +1,8 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:collection/collection.dart';
 
-typedef _FromMap<T> = T Function(Map<String, dynamic> e);
-typedef _ToMap<T> = Map<String, dynamic> Function(T e);
+typedef _FromMap<T> = T Function(dynamic e);
+typedef _ToMap<T> = dynamic Function(T e);
 
 class TypedConverter<T> {
   final _ToMap<T> toMap;
@@ -53,10 +53,8 @@ class TypedStorage<T> {
   Future<void> addAll(List<T> data) async =>
       await _box.addAll(data.map(_typedConverter.toMap));
 
-  List<T> get values => _box.values
-      .map<T>(_typedConverter.fromMap as T Function(dynamic))
-      .toList()
-      .cast<T>();
+  List<T> get values =>
+      _box.values.map<T>(_typedConverter.fromMap).toList().cast<T>();
 
   List<T> paginatedValues({
     int? startKey,
@@ -64,7 +62,7 @@ class TypedStorage<T> {
   }) =>
       _box
           .valuesBetween(startKey: startKey, endKey: endKey)
-          .map<T>(_typedConverter.fromMap as T Function(dynamic))
+          .map<T>(_typedConverter.fromMap)
           .toList()
           .cast<T>();
 
