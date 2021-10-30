@@ -46,8 +46,7 @@ class _FluteStorage {
   ///```
   Future<void> init([String boxName = 'flute', String? subDir]) async {
     await Hive.initFlutter(subDir);
-    await Hive.openBox(boxName);
-    _box = Hive.box(boxName);
+    _box = await Hive.openBox(boxName);
   }
 
   /// Reads the storage, if there are any match with the key, it returns
@@ -62,6 +61,8 @@ class _FluteStorage {
   /// final myName = FluteStorage.read<String>('myName');
   /// ```
   T? read<T>(String key) => _box.get(key);
+
+  // List readAll() => _box.valuesBetween().toList();
 
   /// Writes a value to the storage with a key.
   ///
@@ -78,10 +79,29 @@ class _FluteStorage {
   /// Usage
   ///
   /// ```dart
-  /// FluteStorage.writeMulti({'myName' : 'Flute', 'flute' : 'best'});
+  /// FluteStorage.writeAll({'myName' : 'Flute', 'flute' : 'best'});
   /// ```
-  Future<void> writeMulti(Map<String, dynamic> data) async =>
+  Future<void> writeAll(Map<String, dynamic> data) async =>
       await _box.putAll(data);
+
+  /// Add data to the storage with auto increment value.
+  Future<void> add<T>(T data) async => await _box.add(data);
+
+  /// Add multiple data to the storage with auto increment value.
+  Future<void> addAll<T>(Iterable<T> data) async => await _box.addAll(data);
+
+  /// Get all values.
+  Iterable<dynamic> get values => _box.values;
+
+  /// Get all keys.
+  Iterable<dynamic> get keys => _box.keys;
+
+  /// Gets values between two indexes.
+  Iterable<dynamic> paginatedValues({
+    int? startKey,
+    int? endKey,
+  }) =>
+      _box.valuesBetween(startKey: startKey, endKey: endKey);
 
   /// Writes a value to the storage with a key if the key's value is null.
   ///
@@ -106,19 +126,15 @@ class _FluteStorage {
   /// will still stay at its location.
   Future<void> clearStorage() async => await _box.clear();
 
-  /// Deletes everything and the file.
-  Future<void> deleteStorage() async => await Hive.deleteBoxFromDisk(_box.name);
-
   /// Closes the storage.
-  Future<void> dispose() async => await _box.close();
+  Future<void> close() async => await _box.close();
 
   /// Creates sub box instances
-  Future<_FluteStorage> openCustomBox(String boxName) async =>
-      _FluteCustomStorage()._openAndGet(boxName);
+  Future<_FluteStorage> openBox(String boxName) async =>
+      _FluteCustomStorage()._openBox(boxName);
 
-  /// Creates sub box instances
-  _FluteStorage customBox(String boxName) =>
-      _FluteCustomStorage()._get(boxName);
+  /// Gets sub box instances
+  _FluteStorage getBox(String boxName) => _FluteCustomStorage()._get(boxName);
 }
 
 /// [FluteStorage] is a local storage implementation for *Flute*.
@@ -139,9 +155,8 @@ class _FluteCustomStorage extends _FluteStorage {
     return this;
   }
 
-  Future<_FluteStorage> _openAndGet(String boxName) async {
-    await Hive.openBox(boxName);
-    _box = Hive.box(boxName);
+  Future<_FluteStorage> _openBox(String boxName) async {
+    _box = await Hive.openBox(boxName);
     return this;
   }
 }
