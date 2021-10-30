@@ -60,7 +60,8 @@ class _FluteStorage {
   /// ```dart
   /// final myName = FluteStorage.read<String>('myName');
   /// ```
-  T? read<T>(String key) => _box.get(key);
+  T? read<T>(String key, {T? defaultValue}) =>
+      _box.get(key, defaultValue: defaultValue);
 
   // List readAll() => _box.valuesBetween().toList();
 
