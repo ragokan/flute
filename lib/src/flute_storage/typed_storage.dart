@@ -24,11 +24,13 @@ class TypedStorage<T> {
   }
 
   Future<void> removeWhere(bool test(T element)) async {
+    final _keys = <int>[];
     for (var entry in _box.toMap().entries) {
       if (test(_typedConverter.fromMap(entry.value))) {
-        await _box.delete(entry.key);
+        _keys.add(entry.key);
       }
     }
+    await _box.deleteAll(_keys);
   }
 
   List<T> where(bool test(T element)) {
@@ -50,7 +52,7 @@ class TypedStorage<T> {
   Future<void> addAll(List<T> data) async =>
       await _box.addAll(data.map(_typedConverter.toMap));
 
-  List<T> get values => _box.values
+  List<T> getValues() => _box.values
       .map<T>((v) => _typedConverter.fromMap(Map<String, dynamic>.from(v)))
       .toList()
       .cast<T>();

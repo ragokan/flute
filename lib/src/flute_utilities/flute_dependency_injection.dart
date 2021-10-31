@@ -57,4 +57,25 @@ mixin FluteDependencyInjection {
       Please read the documents or hover over the [use] function to see its usage.
       Note that you can't use type [dynamic] with [use] function.
         '''));
+
+  /// Returns the dependency that is injected before with [inject] function.
+  ///
+  /// ```dart
+  /// Flute.use<Counter>().count++;
+  /// ```
+  ///
+  /// If you are going to use [use] function multiple times in your code,
+  /// it is best to assign it to a variable.
+  /// ```dart
+  /// final counter = Flute.use<Counter>();
+  /// counter.count++;
+  /// counter.count--;
+  /// ```
+  TypedStorage<T> useTypedStorage<T>() =>
+      _dependencies.firstWhere((dependency) => dependency is TypedStorage<T>,
+          orElse: () => throw Exception('''
+      You have to inject a variable to use it with [use] function.
+      Please read the documents or hover over the [use] function to see its usage.
+      Note that you can't use type [dynamic] with [use] function.
+        '''));
 }
