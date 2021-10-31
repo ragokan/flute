@@ -11,7 +11,7 @@ class TypedConverter<T> {
 }
 
 class TypedStorage<T> {
-  final Box _box;
+  Box _box;
   final TypedConverter<T> _typedConverter;
   TypedStorage(this._box, this._typedConverter);
 
@@ -68,6 +68,8 @@ class TypedStorage<T> {
   Future<void> removeAt(int index) async => await _box.deleteAt(index);
 
   Future<void> clearStorage() async => await _box.clear();
+
+  Future<void> open() async => _box = await Hive.openBox(_box.name);
 
   Future<void> close() async => await _box.close();
 }
