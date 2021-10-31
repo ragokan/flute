@@ -33,7 +33,7 @@ abstract class FluteLocalizationProvider<T extends FluteLanguageBase>
 
   FluteLocalizationProvider(T language) : super(language) {
     // Get data from save
-    setLocale(FluteStorage.read<String>('locale'));
+    setLocale(FluteStorage.get<String>('locale'));
   }
 
   // Add new locales here
@@ -50,6 +50,6 @@ abstract class FluteLocalizationProvider<T extends FluteLanguageBase>
   void setLocale(String? newLocale) {
     if (newLocale == null) return;
     set(locales[newLocale]!);
-    FluteStorage.write(kLocaleKey, newLocale);
+    FluteStorage.set(kLocaleKey, newLocale);
   }
 }

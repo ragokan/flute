@@ -71,8 +71,8 @@ mixin FluteDependencyInjection {
   /// counter.count++;
   /// counter.count--;
   /// ```
-  TypedStorage<T> useTypedStorage<T>() =>
-      _dependencies.firstWhere((dependency) => dependency is TypedStorage<T>,
+  TypedBox<T> useTypedStorage<T>() =>
+      _dependencies.firstWhere((dependency) => dependency is TypedBox<T>,
           orElse: () => throw Exception('''
       You have to inject a variable to use it with [use] function.
       Please read the documents or hover over the [use] function to see its usage.

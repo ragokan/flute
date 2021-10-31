@@ -10,20 +10,26 @@ class TypedConverter<T> {
   TypedConverter({required this.toMap, required this.fromMap});
 }
 
-class TypedStorage<T> {
+class TypedBox<T> {
   Box _box;
   final TypedConverter<T> _typedConverter;
-  TypedStorage(this._box, this._typedConverter);
+  TypedBox(this._box, this._typedConverter);
 
-  static Future<TypedStorage<T>> openBox<T>(
+  static Future<TypedBox<T>> box<T>(
     String boxName, {
     required TypedConverter<T> converter,
+    bool open = false,
   }) async {
-    final _box = await Hive.openBox(boxName);
-    return TypedStorage<T>(_box, converter);
+    late final Box _box;
+    if (open) {
+      _box = await Hive.openBox(boxName);
+    } else {
+      _box = Hive.box(boxName);
+    }
+    return TypedBox<T>(_box, converter);
   }
 
-  Future<void> removeWhere(bool test(T element)) async {
+  Future<void> deleteWhere(bool test(T element)) async {
     final _keys = <int>[];
     for (var entry in _box.toMap().entries) {
       if (test(_typedConverter.fromMap(entry.value))) {
@@ -44,10 +50,7 @@ class TypedStorage<T> {
     return _entries;
   }
 
-  void forEach(void action(T element)) =>
-      _box.values.forEach((e) => action(_typedConverter.fromMap(e)));
-
-  Future<void> add(T data) async => await _box.add(_typedConverter.toMap(data));
+  Future<int> add(T data) async => await _box.add(_typedConverter.toMap(data));
 
   Future<void> addAll(List<T> data) async =>
       await _box.addAll(data.map(_typedConverter.toMap));
@@ -67,9 +70,9 @@ class TypedStorage<T> {
           .toList()
           .cast<T>();
 
-  Future<void> removeAt(int index) async => await _box.deleteAt(index);
+  Future<void> deleteAt(int index) async => await _box.deleteAt(index);
 
-  Future<void> clearStorage() async => await _box.clear();
+  Future<void> clear() async => await _box.clear();
 
   Future<void> open() async => _box = await Hive.openBox(_box.name);
 

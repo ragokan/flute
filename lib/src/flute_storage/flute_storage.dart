@@ -21,7 +21,7 @@ class _FluteStorage {
     final _stream = _box.watch(key: key).listen((e) => callback(e.value));
 
     if (callImmediately) {
-      callback(read<T>(key));
+      callback(get<T>(key));
     }
 
     return _stream.cancel;
@@ -30,7 +30,7 @@ class _FluteStorage {
   late final Box _box;
 
   /// Returns true if the storage contains that key.
-  bool contains(String key) => _box.containsKey(key);
+  bool containsKey(String key) => _box.containsKey(key);
 
   /// [init] function is required to start [FluteStorage]
   ///
@@ -58,9 +58,9 @@ class _FluteStorage {
   /// Usage
   ///
   /// ```dart
-  /// final myName = FluteStorage.read<String>('myName');
+  /// final myName = FluteStorage.get<String>('myName');
   /// ```
-  T? read<T>(String key, {T? defaultValue}) =>
+  T? get<T>(String key, {T? defaultValue}) =>
       _box.get(key, defaultValue: defaultValue);
 
   // List readAll() => _box.valuesBetween().toList();
@@ -70,32 +70,19 @@ class _FluteStorage {
   /// Usage
   ///
   /// ```dart
-  /// FluteStorage.write<String>('myName','Flute');
+  /// FluteStorage.set<String>('myName','Flute');
   /// ```
-  Future<void> write<T>(String key, T value) async =>
-      await _box.put(key, value);
+  Future<void> set<T>(String key, T value) async => await _box.put(key, value);
 
   /// Writes multiple data to the local storage.
   ///
   /// Usage
   ///
   /// ```dart
-  /// FluteStorage.writeAll({'myName' : 'Flute', 'flute' : 'best'});
+  /// FluteStorage.setAll({'myName' : 'Flute', 'flute' : 'best'});
   /// ```
-  Future<void> writeAll(Map<String, dynamic> data) async =>
+  Future<void> setAll(Map<String, dynamic> data) async =>
       await _box.putAll(data);
-
-  /// Add data to the storage with auto increment value.
-  Future<void> add<T>(T data) async => await _box.add(data);
-
-  /// Add multiple data to the storage with auto increment value.
-  Future<void> addAll<T>(Iterable<T> data) async => await _box.addAll(data);
-
-  /// Get all values.
-  Iterable<dynamic> get values => _box.values;
-
-  /// Get all keys.
-  Iterable<dynamic> get keys => _box.keys;
 
   /// Gets values between two indexes.
   Iterable<dynamic> paginatedValues({
@@ -109,33 +96,28 @@ class _FluteStorage {
   /// Usage
   ///
   /// ```dart
-  /// FluteStorage.removeKey('myName');
+  /// FluteStorage.delete('myName');
   /// ```
-  Future<void> removeKey(String key) async => await _box.delete(key);
+  Future<void> delete(String key) async => await _box.delete(key);
 
   /// Writes a value to the storage with a key if the key's value is null.
   ///
   /// Usage
   ///
   /// ```dart
-  /// FluteStorage.removeKeys(['myName', 'flute']);
+  /// FluteStorage.deleteKeys(['myName', 'flute']);
   /// ```
-  Future<void> removeKeys(List<String> keys) async =>
-      await _box.deleteAll(keys);
+  Future<void> deleteAll(List<String> keys) async => await _box.deleteAll(keys);
 
   /// Deletes all keys and values from the storage, the file
   /// will still stay at its location.
-  Future<void> clearStorage() async => await _box.clear();
+  Future<void> clear() async => await _box.clear();
 
   /// Closes the storage.
-  Future<void> close() async => await _box.close();
-
-  /// Creates sub box instances
-  Future<_FluteStorage> openBox(String boxName) async =>
-      _FluteCustomStorage()._openBox(boxName);
-
-  /// Gets sub box instances
-  _FluteStorage getBox(String boxName) => _FluteCustomStorage()._get(boxName);
+  Future<void> dispose() async {
+    await _box.close();
+    await Hive.close();
+  }
 }
 
 /// [FluteStorage] is a local storage implementation for *Flute*.
@@ -149,15 +131,3 @@ class _FluteStorage {
 /// ```
 // ignore: non_constant_identifier_names
 final _FluteStorage FluteStorage = _FluteStorage();
-
-class _FluteCustomStorage extends _FluteStorage {
-  _FluteStorage _get(String boxName) {
-    _box = Hive.box(boxName);
-    return this;
-  }
-
-  Future<_FluteStorage> _openBox(String boxName) async {
-    _box = await Hive.openBox(boxName);
-    return this;
-  }
-}

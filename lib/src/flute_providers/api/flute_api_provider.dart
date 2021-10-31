@@ -69,7 +69,7 @@ class FluteApiProvider {
         path: path,
         data: body,
         queryParameters: queryParameters,
-        headers: {'Authorization': FluteStorage.read(kTokenKey)},
+        headers: {'Authorization': FluteStorage.get(kTokenKey)},
         baseUrl: _endPoint,
       ),
     );
