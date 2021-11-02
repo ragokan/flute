@@ -17,7 +17,7 @@ class FluteNotifierProvider<T extends FluteNotifier>
           key: key,
           create:
               inject ? (context) => Flute.inject<T>(create(context)) : create,
-          lazy: lazy,
+          lazy: inject ? false : lazy,
           builder: builder,
           child: child,
         );
