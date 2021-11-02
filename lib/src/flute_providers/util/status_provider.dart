@@ -7,8 +7,8 @@ enum Status {
   error,
 }
 
-typedef StatusCallback<T, X extends FluteProvider<S>, S> = T Function(S state);
-typedef StatusListenCallback<X extends FluteProvider<S>, S> = void Function(
+typedef _StatusCallback<T, X extends FluteProvider<S>, S> = T Function(S state);
+typedef _StatusListenCallback<X extends FluteProvider<S>, S> = void Function(
     S state);
 
 mixin StatusProvider<X extends FluteProvider<S>, S> on FluteProvider<S> {
@@ -25,10 +25,10 @@ mixin StatusProvider<X extends FluteProvider<S>, S> on FluteProvider<S> {
   }
 
   T when<T>({
-    required StatusCallback<T, X, S> initial,
-    required StatusCallback<T, X, S> loading,
-    required StatusCallback<T, X, S> done,
-    required StatusCallback<T, X, S> error,
+    required _StatusCallback<T, X, S> initial,
+    required _StatusCallback<T, X, S> loading,
+    required _StatusCallback<T, X, S> done,
+    required _StatusCallback<T, X, S> error,
   }) {
     switch (_status) {
       case Status.initial:
@@ -45,10 +45,10 @@ mixin StatusProvider<X extends FluteProvider<S>, S> on FluteProvider<S> {
   }
 
   T? maybeWhen<T>({
-    StatusCallback<T, X, S>? initial,
-    StatusCallback<T, X, S>? loading,
-    StatusCallback<T, X, S>? done,
-    StatusCallback<T, X, S>? error,
+    _StatusCallback<T, X, S>? initial,
+    _StatusCallback<T, X, S>? loading,
+    _StatusCallback<T, X, S>? done,
+    _StatusCallback<T, X, S>? error,
   }) {
     switch (_status) {
       case Status.initial:
@@ -65,10 +65,10 @@ mixin StatusProvider<X extends FluteProvider<S>, S> on FluteProvider<S> {
   }
 
   VoidFunction listenWhen({
-    StatusListenCallback<X, S>? initial,
-    StatusListenCallback<X, S>? loading,
-    StatusListenCallback<X, S>? done,
-    StatusListenCallback<X, S>? error,
+    _StatusListenCallback<X, S>? initial,
+    _StatusListenCallback<X, S>? loading,
+    _StatusListenCallback<X, S>? done,
+    _StatusListenCallback<X, S>? error,
     bool callImmediately = true,
   }) {
     void _listener() {

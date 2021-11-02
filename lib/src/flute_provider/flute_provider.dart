@@ -21,7 +21,7 @@ class FluteProvider<T> extends FluteNotifier {
   /// counterProvider.set(1);
   /// ```
   void set(T newState) {
-    if (newState == _state) return;
+    if (identical(state, newState)) return;
     _state = newState;
     notifyListeners();
   }
