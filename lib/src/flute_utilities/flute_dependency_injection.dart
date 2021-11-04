@@ -6,9 +6,9 @@ import '../../flute.dart';
 ///
 /// It is a totally undependent mixin, no override or anything required.
 mixin FluteDependencyInjection {
-  /// A [Set] of injected [_dependencies].
+  /// A [List] of injected [_dependencies].
   /// It is set because we don't want to have duplicates.
-  final Set _dependencies = <dynamic>{};
+  final List _dependencies = <dynamic>[];
 
   /// Injects the dependency to the [Flute], so that you can use it
   /// with [use] function.
@@ -26,6 +26,17 @@ mixin FluteDependencyInjection {
   T inject<T>(T dependency) {
     _dependencies.add(dependency);
     return dependency;
+  }
+
+  /// Inject the service and use it as a Future.
+  ///
+  /// ```dart
+  /// await Flute.inject(ApiService(), (s) => s.init())
+  /// ```
+  Future<void> injectFuture<T>(
+      T dependency, Future<void> Function(T dependency) future) async {
+    _dependencies.add(dependency);
+    await future(dependency);
   }
 
   /// Removes the dependency that is injected before with [inject] function.

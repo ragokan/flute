@@ -7,8 +7,8 @@
 ///  need context to have a state or update state.
 library flute;
 
-// Directly exporting provider instead of installing provider, too.
-export 'package:provider/provider.dart';
+// Directly exporting riverpod instead of installing riverpod.
+export 'package:flutter_riverpod/flutter_riverpod.dart';
 
 export 'src/flute_constants.dart';
 export 'src/flute_extensions/index.dart';
@@ -17,7 +17,6 @@ export 'src/flute_provider/index.dart';
 export 'src/flute_providers/index.dart';
 export 'src/flute_storage/index.dart';
 export 'src/flute_utilities/index.dart';
-export 'src/flute_widgets/index.dart';
 export 'src/other/index.dart';
 
 
