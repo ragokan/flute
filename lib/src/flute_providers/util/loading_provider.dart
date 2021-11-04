@@ -1,6 +1,6 @@
-import 'package:flute/flute.dart';
+import 'package:flutter/material.dart';
 
-mixin LoadingProvider on FluteNotifier {
+mixin LoadingProvider on ChangeNotifier {
   bool get isLoading => _isLoading ?? false;
   bool? _isLoading;
 

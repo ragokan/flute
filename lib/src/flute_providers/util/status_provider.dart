@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flute/flute.dart';
+import 'package:flutter/material.dart';
 
 enum Status {
   initial,
@@ -8,10 +11,8 @@ enum Status {
 }
 
 typedef _StatusCallback<T, X extends FluteProvider<S>, S> = T Function(S state);
-typedef _StatusListenCallback<X extends FluteProvider<S>, S> = void Function(
-    S state);
 
-mixin StatusProvider<X extends FluteProvider<S>, S> on FluteProvider<S> {
+mixin StatusProvider<X extends FluteProvider<S>, S> on StateNotifier<S> {
   Status _status = Status.initial;
 
   Status get status => _status;
@@ -20,7 +21,7 @@ mixin StatusProvider<X extends FluteProvider<S>, S> on FluteProvider<S> {
     if (_status == newStatus) return;
     _status = newStatus;
     if (shouldNotify) {
-      notifyListeners();
+      _controller.add(null);
     }
   }
 
@@ -44,59 +45,21 @@ mixin StatusProvider<X extends FluteProvider<S>, S> on FluteProvider<S> {
     }
   }
 
-  T? maybeWhen<T>({
-    _StatusCallback<T, X, S>? initial,
-    _StatusCallback<T, X, S>? loading,
-    _StatusCallback<T, X, S>? done,
-    _StatusCallback<T, X, S>? error,
-  }) {
-    switch (_status) {
-      case Status.initial:
-        return initial?.call(state);
-      case Status.loading:
-        return loading?.call(state);
-      case Status.done:
-        return done?.call(state);
-      case Status.error:
-        return error?.call(state);
-      default:
-        return initial?.call(state);
-    }
+  @protected
+  void initStatusProvider() {
+    _removeListener = addListener((_) => _controller.add(null));
   }
 
-  VoidFunction listenWhen({
-    _StatusListenCallback<X, S>? initial,
-    _StatusListenCallback<X, S>? loading,
-    _StatusListenCallback<X, S>? done,
-    _StatusListenCallback<X, S>? error,
-    bool callImmediately = true,
-  }) {
-    void _listener() {
-      switch (_status) {
-        case Status.initial:
-          initial?.call(state);
-          break;
-        case Status.loading:
-          loading?.call(state);
-          break;
-        case Status.done:
-          done?.call(state);
-          break;
-        case Status.error:
-          error?.call(state);
-          break;
-        default:
-          initial?.call(state);
-          break;
-      }
-    }
+  VoidFunction? _removeListener;
 
-    addListener(_listener);
+  final StreamController _controller = StreamController.broadcast();
+  Stream get statusStream => _controller.stream;
 
-    if (callImmediately) {
-      _listener();
-    }
-
-    return () => removeListener(_listener);
+  @override
+  void dispose() {
+    _removeListener?.call();
+    _controller.close();
+    _controller.sink.close();
+    super.dispose();
   }
 }

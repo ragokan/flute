@@ -5,7 +5,7 @@ import 'flute_utilities/index.dart';
 ///
 /// We use it as a private class because it is not optimal to have multiple
 /// Flute classes.
-class _Flute with FluteDependencyInjection, FluteFunctions {}
+class _Flute with FluteFunctions {}
 
 /// The root of [Flute] library's utilities.
 ///

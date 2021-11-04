@@ -1,9 +1,9 @@
 import 'package:flute/flute.dart';
+import 'package:flutter/material.dart';
 
-typedef _StatusNotifierCallback<T, X extends FluteNotifier> = T Function();
-typedef _StatusNotifierListenCallback = void Function();
+typedef _StatusNotifierCallback<T, X extends ChangeNotifier> = T Function();
 
-mixin StatusNotifierProvider<X extends FluteNotifier> on FluteNotifier {
+mixin StatusNotifierProvider<X extends ChangeNotifier> on ChangeNotifier {
   Status _status = Status.initial;
 
   Status get status => _status;
@@ -34,61 +34,5 @@ mixin StatusNotifierProvider<X extends FluteNotifier> on FluteNotifier {
       default:
         return initial();
     }
-  }
-
-  T? maybeWhen<T>({
-    _StatusNotifierCallback<T, X>? initial,
-    _StatusNotifierCallback<T, X>? loading,
-    _StatusNotifierCallback<T, X>? done,
-    _StatusNotifierCallback<T, X>? error,
-  }) {
-    switch (_status) {
-      case Status.initial:
-        return initial?.call();
-      case Status.loading:
-        return loading?.call();
-      case Status.done:
-        return done?.call();
-      case Status.error:
-        return error?.call();
-      default:
-        return initial?.call();
-    }
-  }
-
-  VoidFunction listenWhen({
-    _StatusNotifierListenCallback? initial,
-    _StatusNotifierListenCallback? loading,
-    _StatusNotifierListenCallback? done,
-    _StatusNotifierListenCallback? error,
-    bool callImmediately = true,
-  }) {
-    void _listener() {
-      switch (_status) {
-        case Status.initial:
-          initial?.call();
-          break;
-        case Status.loading:
-          loading?.call();
-          break;
-        case Status.done:
-          done?.call();
-          break;
-        case Status.error:
-          error?.call();
-          break;
-        default:
-          initial?.call();
-          break;
-      }
-    }
-
-    addListener(_listener);
-
-    if (callImmediately) {
-      _listener();
-    }
-
-    return () => removeListener(_listener);
   }
 }
