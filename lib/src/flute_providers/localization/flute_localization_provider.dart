@@ -28,7 +28,7 @@ import 'flute_language_base.dart';
 /// }
 /// ```
 abstract class FluteLocalizationProvider<T extends FluteLanguageBase>
-    extends FluteProvider<T> {
+    extends FluteStateNotifier<T> {
   final String kLocaleKey = 'kLocaleKey';
 
   FluteLocalizationProvider(T language) : super(language) {

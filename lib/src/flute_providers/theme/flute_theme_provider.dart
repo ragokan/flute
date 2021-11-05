@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../flute.dart';
 
-abstract class FluteThemeProvider extends FluteProvider<ThemeData> {
+abstract class FluteThemeProvider extends FluteStateNotifier<ThemeData> {
   FluteThemeProvider(ThemeData state) : super(state);
 
   void setMode(ThemeMode mode) {

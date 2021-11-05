@@ -1,1 +1,2 @@
-export './flute_provider.dart';
+export 'flute_state_notifier.dart';
+export 'flute_notifier.dart';

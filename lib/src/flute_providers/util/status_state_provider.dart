@@ -1,15 +1,13 @@
+import 'dart:async';
+
 import 'package:flute/flute.dart';
+import 'package:flutter/material.dart';
 
-enum Status {
-  initial,
-  loading,
-  done,
-  error,
-}
+typedef _StatusCallback<T, X extends FluteStateNotifier<S>, S> = T Function(
+    S state);
 
-typedef _StatusCallback<T, X extends FluteNotifier<S>, S> = T Function(S state);
-
-mixin StatusProvider<X extends FluteNotifier<S>, S> on FluteNotifier<S> {
+mixin StatusProvider<X extends FluteStateNotifier<S>, S>
+    on FluteStateNotifier<S> {
   Status _status = Status.initial;
 
   Status get status => _status;
@@ -18,7 +16,7 @@ mixin StatusProvider<X extends FluteNotifier<S>, S> on FluteNotifier<S> {
     if (_status == newStatus) return;
     _status = newStatus;
     if (shouldNotify) {
-      notifyListeners();
+      _controller.add(null);
     }
   }
 
@@ -40,5 +38,23 @@ mixin StatusProvider<X extends FluteNotifier<S>, S> on FluteNotifier<S> {
       default:
         return initial(state);
     }
+  }
+
+  @protected
+  void initStatusProvider() {
+    _removeListener = addListener((_) => _controller.add(null));
+  }
+
+  VoidFunction? _removeListener;
+
+  final StreamController _controller = StreamController.broadcast();
+  Stream get statusStream => _controller.stream;
+
+  @override
+  void dispose() {
+    _removeListener?.call();
+    _controller.close();
+    _controller.sink.close();
+    super.dispose();
   }
 }

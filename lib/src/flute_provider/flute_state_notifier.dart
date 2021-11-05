@@ -2,10 +2,8 @@ import '../../flute.dart';
 
 typedef _UpdateCallback<T> = T Function(T state);
 
-/// {@macro flute_provider}
-class FluteProvider<T> extends StateNotifier<T> {
-  /// {@macro flute_provider}
-  FluteProvider(this._state) : super(_state);
+class FluteStateNotifier<T> extends StateNotifier<T> {
+  FluteStateNotifier(this._state) : super(_state);
 
   T _state;
 
