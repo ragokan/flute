@@ -9,6 +9,7 @@ library flute;
 
 // Directly exporting riverpod instead of installing riverpod.
 export 'package:flutter_riverpod/flutter_riverpod.dart';
+export 'package:flutter/foundation.dart' show ChangeNotifier;
 
 export 'src/flute_constants.dart';
 export 'src/flute_extensions/index.dart';

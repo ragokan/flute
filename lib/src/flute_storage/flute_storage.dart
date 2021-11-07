@@ -84,10 +84,10 @@ class _FluteStorage {
   /// Usage
   ///
   /// ```dart
-  /// FluteStorage.set<String>('myName','Flute');
+  /// FluteStorage.setIfAbsent<String>('myName','Flute');
   /// ```
   Future<void> setIfAbsent<T>(String key, T value) async {
-    if (_box.keys.contains(key)) return;
+    if (_box.containsKey(key)) return;
     await _box.put(key, value);
   }
 
