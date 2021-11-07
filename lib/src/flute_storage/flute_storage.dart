@@ -51,7 +51,6 @@ class _FluteStorage {
     Hive.init(path.join(appDir.path, subDir));
 
     _box = await Hive.openBox(boxName);
-    setIfAbsent(kApplicationDocumentsDirectory, appDir.path);
   }
 
   /// Reads the storage, if there are any match with the key, it returns

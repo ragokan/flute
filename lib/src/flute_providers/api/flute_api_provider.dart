@@ -3,53 +3,83 @@ import 'package:flutter/material.dart';
 
 import '../../../flute.dart';
 
+typedef OnError = void Function(
+    DioError error, ErrorInterceptorHandler handler);
+
 class FluteApiProvider {
   final String? _endPoint;
 
-  final void Function(DioError error, ErrorInterceptorHandler handler)?
-      _onError;
-
-  const FluteApiProvider([this._endPoint, this._onError]);
+  const FluteApiProvider([this._endPoint]);
 
   Future<Response<T>> get<T>(
     String path, {
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? body,
+    OnError? onError,
   }) async =>
-      await _baseRequest('GET', path,
-          queryParameters: queryParameters, body: body);
+      await _baseRequest(
+        'GET',
+        path,
+        queryParameters: queryParameters,
+        body: body,
+        onError: onError,
+      );
 
   Future<Response<T>> post<T>(
     String path, {
     Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
+    OnError? onError,
   }) async =>
-      await _baseRequest('POST', path,
-          queryParameters: queryParameters, body: body);
+      await _baseRequest(
+        'POST',
+        path,
+        queryParameters: queryParameters,
+        body: body,
+        onError: onError,
+      );
 
   Future<Response<T>> patch<T>(
     String path, {
     Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
+    OnError? onError,
   }) async =>
-      await _baseRequest('PATCH', path,
-          queryParameters: queryParameters, body: body);
+      await _baseRequest(
+        'PATCH',
+        path,
+        queryParameters: queryParameters,
+        body: body,
+        onError: onError,
+      );
 
   Future<Response<T>> put<T>(
     String path, {
     Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
+    OnError? onError,
   }) async =>
-      await _baseRequest('PUT', path,
-          queryParameters: queryParameters, body: body);
+      await _baseRequest(
+        'PUT',
+        path,
+        queryParameters: queryParameters,
+        body: body,
+        onError: onError,
+      );
 
   Future<Response<T>> delete<T>(
     String path, {
     Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
+    OnError? onError,
   }) async =>
-      _baseRequest('DELETE', path,
-          queryParameters: queryParameters, body: body);
+      _baseRequest(
+        'DELETE',
+        path,
+        queryParameters: queryParameters,
+        body: body,
+        onError: onError,
+      );
 
   @protected
   Future<Response<T>> _baseRequest<T>(
@@ -57,10 +87,11 @@ class FluteApiProvider {
     String path, {
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? body,
+    OnError? onError,
   }) async {
     final _dio = Dio();
-    if (_onError != null) {
-      _dio.interceptors.add(InterceptorsWrapper(onError: _onError));
+    if (onError != null) {
+      _dio.interceptors.add(InterceptorsWrapper(onError: onError));
     }
 
     final _response = await _dio.fetch<T>(
