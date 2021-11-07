@@ -19,7 +19,7 @@ mixin FluteFunctions {
   Timer setTimeout(Duration duration, VoidFunction callback) =>
       Timer(duration, () => callback());
 
-  /// [seconds] is the amount of time that Flute will wait to call
+  /// [duration] is the amount of time that Flute will wait to call
   /// the function again, it will continiously work.
   ///
   /// Returns a function that can stop the interval.
@@ -32,8 +32,8 @@ mixin FluteFunctions {
   /// });
   /// Flute.setTimeout(20, stopInterval);
   /// ```
-  Function setInterval(int seconds, VoidFunction callback) {
-    final timer = Timer.periodic(Duration(seconds: seconds), (_) => callback());
+  Function setInterval(Duration duration, VoidFunction callback) {
+    final timer = Timer.periodic(duration, (_) => callback());
     return timer.cancel;
   }
 

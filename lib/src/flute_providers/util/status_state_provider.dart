@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flute/flute.dart';
-import 'package:flutter/material.dart';
 
 typedef _StatusCallback<T, X extends FluteStateNotifier<S>, S> = T Function(
     S state);
@@ -40,19 +39,11 @@ mixin StatusProvider<X extends FluteStateNotifier<S>, S>
     }
   }
 
-  @protected
-  void initStatusProvider() {
-    _removeListener = addListener((_) => _controller.add(null));
-  }
-
-  VoidFunction? _removeListener;
-
   final StreamController _controller = StreamController.broadcast();
   Stream get statusStream => _controller.stream;
 
   @override
   void dispose() {
-    _removeListener?.call();
     _controller.close();
     _controller.sink.close();
     super.dispose();

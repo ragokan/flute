@@ -1,5 +1,7 @@
 import 'package:flute/flute.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 
 /// The implementation of [FluteStorage]
 class _FluteStorage {
@@ -45,8 +47,11 @@ class _FluteStorage {
   ///}
   ///```
   Future<void> init([String boxName = 'flute', String? subDir]) async {
-    await Hive.initFlutter(subDir);
+    final appDir = await getApplicationDocumentsDirectory();
+    Hive.init(path.join(appDir.path, subDir));
+
     _box = await Hive.openBox(boxName);
+    setIfAbsent(kApplicationDocumentsDirectory, appDir);
   }
 
   /// Reads the storage, if there are any match with the key, it returns
@@ -73,6 +78,18 @@ class _FluteStorage {
   /// FluteStorage.set<String>('myName','Flute');
   /// ```
   Future<void> set<T>(String key, T value) async => await _box.put(key, value);
+
+  /// Writes a value to the storage with a key if it doesn't exists.
+  ///
+  /// Usage
+  ///
+  /// ```dart
+  /// FluteStorage.set<String>('myName','Flute');
+  /// ```
+  Future<void> setIfAbsent<T>(String key, T value) async {
+    if (_box.keys.contains(key)) return;
+    await _box.put(key, value);
+  }
 
   /// Writes multiple data to the local storage.
   ///
