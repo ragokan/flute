@@ -47,8 +47,7 @@ class _FluteStorage {
   ///}
   ///```
   Future<void> init([String boxName = 'flute', String? subDir]) async {
-    final appDir = await getApplicationDocumentsDirectory();
-    Hive.init(path.join(appDir.path, subDir));
+    await Hive.initFlutter(subDir);
 
     _box = await Hive.openBox(boxName);
   }
