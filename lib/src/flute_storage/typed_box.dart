@@ -72,6 +72,8 @@ class TypedBox<T> {
 
   Future<void> deleteAt(int index) async => await _box.deleteAt(index);
 
+  bool get isNotEmpty => _box.keys.isNotEmpty;
+
   Future<void> clear() async => await _box.clear();
 
   Future<void> open() async => _box = await Hive.openBox(_box.name);
