@@ -71,18 +71,18 @@ class _FluteStorage {
   /// Usage
   ///
   /// ```dart
-  /// FluteStorage.set<String>('myName','Flute');
+  /// FluteStorage.put<String>('myName','Flute');
   /// ```
-  Future<void> set<T>(String key, T value) async => await _box.put(key, value);
+  Future<void> put<T>(String key, T value) async => await _box.put(key, value);
 
   /// Writes a value to the storage with a key if it doesn't exists.
   ///
   /// Usage
   ///
   /// ```dart
-  /// FluteStorage.setIfAbsent<String>('myName','Flute');
+  /// FluteStorage.putIfAbsent<String>('myName','Flute');
   /// ```
-  Future<void> setIfAbsent<T>(String key, T value) async {
+  Future<void> putIfAbsent<T>(String key, T value) async {
     if (_box.containsKey(key)) return;
     await _box.put(key, value);
   }
@@ -92,9 +92,9 @@ class _FluteStorage {
   /// Usage
   ///
   /// ```dart
-  /// FluteStorage.setAll({'myName' : 'Flute', 'flute' : 'best'});
+  /// FluteStorage.putAll({'myName' : 'Flute', 'flute' : 'best'});
   /// ```
-  Future<void> setAll(Map<String, dynamic> data) async =>
+  Future<void> putAll(Map<String, dynamic> data) async =>
       await _box.putAll(data);
 
   /// Gets values between two indexes.

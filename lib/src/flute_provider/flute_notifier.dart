@@ -11,14 +11,14 @@ class FluteNotifier<T> extends ChangeNotifier {
   /// The state which immutable.
   T get state => _state;
 
-  /// To set the [state], you can use [set] method.
+  /// To set the [state], you can use [emit] method.
   ///
   /// Example:
   ///
   /// ```dart
   /// counterProvider.set(1);
   /// ```
-  void set(T newState) {
+  void emit(T newState) {
     if (identical(state, newState)) return;
     _state = newState;
     notifyListeners();
@@ -31,7 +31,7 @@ class FluteNotifier<T> extends ChangeNotifier {
   /// ```dart
   /// counterProvider.update((state) => state + 1);
   /// ```
-  void update(_UpdateCallback<T> callback) => set(callback(_state));
+  void update(_UpdateCallback<T> callback) => emit(callback(_state));
 
   /// Listens the state changes, similar to [addListener] and [removeListener]
   /// but it has access to the state.

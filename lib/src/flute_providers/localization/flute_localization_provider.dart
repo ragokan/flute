@@ -50,6 +50,6 @@ abstract class FluteLocalizationProvider<T extends FluteLanguageBase>
   void setLocale(String? newLocale) {
     if (newLocale == null || newLocale == locale) return;
     set(locales[newLocale]!);
-    FluteStorage.set(kLocaleKey, newLocale);
+    FluteStorage.put(kLocaleKey, newLocale);
   }
 }
