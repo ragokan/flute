@@ -45,9 +45,16 @@ class _FluteStorage {
   ///}
   ///```
   Future<void> init([String boxName = 'flute', String? subDir]) async {
-    await Hive.initFlutter(subDir);
+    try {
+      await Hive.initFlutter(subDir);
 
-    _box = await Hive.openBox(boxName);
+      _box = await Hive.openBox(boxName);
+    } catch (e) {
+      await Hive.close().catchError((_) {});
+      await Hive.deleteBoxFromDisk(boxName).catchError((_) {});
+      await Hive.initFlutter(subDir).catchError((_) {});
+      _box = await Hive.openBox(boxName);
+    }
   }
 
   /// Reads the storage, if there are any match with the key, it returns
