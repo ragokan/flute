@@ -15,7 +15,7 @@ class TypedBox<T> {
   final TypedConverter<T> _typedConverter;
   TypedBox(String boxName, this._typedConverter) : _box = Hive.box(boxName);
 
-  static Future<TypedBox<T>> box<T>(
+  static Future<TypedBox<T>> openBox<T>(
     String boxName, {
     required TypedConverter<T> converter,
   }) async {
