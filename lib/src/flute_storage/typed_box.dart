@@ -13,20 +13,14 @@ class TypedConverter<T> {
 class TypedBox<T> {
   Box _box;
   final TypedConverter<T> _typedConverter;
-  TypedBox(this._box, this._typedConverter);
+  TypedBox(String boxName, this._typedConverter) : _box = Hive.box(boxName);
 
   static Future<TypedBox<T>> box<T>(
     String boxName, {
     required TypedConverter<T> converter,
-    bool open = false,
   }) async {
-    late final Box _box;
-    if (open) {
-      _box = await Hive.openBox(boxName);
-    } else {
-      _box = Hive.box(boxName);
-    }
-    return TypedBox<T>(_box, converter);
+    await Hive.openBox(boxName);
+    return TypedBox<T>(boxName, converter);
   }
 
   Future<void> deleteWhere(bool test(T element)) async {
