@@ -32,10 +32,8 @@ mixin FluteNotifierProviderOverrideMixin<Notifier extends FluteNotifier<State>?,
   @override
   late final List<ProviderOrFamily>? dependencies = [notifier];
 
-  Override overrideWithValue(Notifier value) {
-    return ProviderOverride(
-      origin: notifier,
-      override: ValueProvider<Notifier>(value),
-    );
-  }
+  Override overrideWithValue(Notifier value) => ProviderOverride(
+        origin: notifier,
+        override: ValueProvider<Notifier>(value),
+      );
 }

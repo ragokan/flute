@@ -16,17 +16,15 @@ class FluteNotifierProviderBuilder {
     Create<Notifier, FluteNotifierProviderRef<Notifier>> create, {
     String? name,
     List<ProviderOrFamily>? dependencies,
-  }) {
-    return FluteNotifierProvider<Notifier, State>(
-      create,
-      name: name,
-      dependencies: dependencies,
-    );
-  }
+  }) =>
+          FluteNotifierProvider<Notifier, State>(
+            create,
+            name: name,
+            dependencies: dependencies,
+          );
 
-  AutoDisposeFluteNotifierProviderBuilder get autoDispose {
-    return const AutoDisposeFluteNotifierProviderBuilder();
-  }
+  AutoDisposeFluteNotifierProviderBuilder get autoDispose =>
+      const AutoDisposeFluteNotifierProviderBuilder();
 
   FluteNotifierProviderFamilyBuilder get family =>
       const FluteNotifierProviderFamilyBuilder();
@@ -40,17 +38,15 @@ class FluteNotifierProviderFamilyBuilder {
     FamilyCreate<Notifier, FluteNotifierProviderRef<Notifier>, Arg> create, {
     String? name,
     List<ProviderOrFamily>? dependencies,
-  }) {
-    return FluteNotifierProviderFamily<Notifier, State, Arg>(
-      create,
-      name: name,
-      dependencies: dependencies,
-    );
-  }
+  }) =>
+          FluteNotifierProviderFamily<Notifier, State, Arg>(
+            create,
+            name: name,
+            dependencies: dependencies,
+          );
 
-  AutoDisposeFluteNotifierProviderFamilyBuilder get autoDispose {
-    return const AutoDisposeFluteNotifierProviderFamilyBuilder();
-  }
+  AutoDisposeFluteNotifierProviderFamilyBuilder get autoDispose =>
+      const AutoDisposeFluteNotifierProviderFamilyBuilder();
 }
 
 class AutoDisposeFluteNotifierProviderBuilder {
@@ -68,9 +64,8 @@ class AutoDisposeFluteNotifierProviderBuilder {
             dependencies: dependencies,
           );
 
-  AutoDisposeFluteNotifierProviderFamilyBuilder get family {
-    return const AutoDisposeFluteNotifierProviderFamilyBuilder();
-  }
+  AutoDisposeFluteNotifierProviderFamilyBuilder get family =>
+      const AutoDisposeFluteNotifierProviderFamilyBuilder();
 }
 
 class AutoDisposeFluteNotifierProviderFamilyBuilder {
@@ -82,11 +77,10 @@ class AutoDisposeFluteNotifierProviderFamilyBuilder {
         create, {
     String? name,
     List<ProviderOrFamily>? dependencies,
-  }) {
-    return AutoDisposeFluteNotifierProviderFamily<Notifier, State, Arg>(
-      create,
-      name: name,
-      dependencies: dependencies,
-    );
-  }
+  }) =>
+          AutoDisposeFluteNotifierProviderFamily<Notifier, State, Arg>(
+            create,
+            name: name,
+            dependencies: dependencies,
+          );
 }
