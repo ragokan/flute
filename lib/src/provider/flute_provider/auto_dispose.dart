@@ -1,8 +1,8 @@
 // ignore_for_file: subtype_of_sealed_class
 part of '../flute_provider.dart';
 
-abstract class AutoDisposeFluteNotifierProviderRef<Notifier, State>
-    implements AutoDisposeRef {
+abstract class AutoDisposeFluteNotifierProviderRef<
+    Notifier extends FluteNotifier<State>, State> implements AutoDisposeRef {
   Notifier get notifier;
 }
 
