@@ -1,4 +1,4 @@
-import 'package:flute/flute.dart';
+part of 'flute_notifier.dart';
 
 enum Status {
   initial,
@@ -9,7 +9,7 @@ enum Status {
 
 typedef _StatusCallback<T, X extends FluteNotifier<S>, S> = T Function(S state);
 
-mixin StatusProvider<X extends FluteNotifier<S>, S> on FluteNotifier<S> {
+mixin StatusNotifier<X extends FluteNotifier<S>, S> on FluteNotifier<S> {
   Status _status = Status.initial;
 
   Status get status => _status;
@@ -17,7 +17,9 @@ mixin StatusProvider<X extends FluteNotifier<S>, S> on FluteNotifier<S> {
   void setStatus(Status newStatus, {bool shouldNotify = true}) {
     if (_status == newStatus) return;
     _status = newStatus;
-    if (shouldNotify) {}
+    if (shouldNotify) {
+      _streamController.add(_state);
+    }
   }
 
   T when<T>({
@@ -36,7 +38,8 @@ mixin StatusProvider<X extends FluteNotifier<S>, S> on FluteNotifier<S> {
       case Status.error:
         return error(state);
       default:
-        return initial(state);
+        throw UnimplementedError(
+            'There are no $status suitable for the $when method!');
     }
   }
 }

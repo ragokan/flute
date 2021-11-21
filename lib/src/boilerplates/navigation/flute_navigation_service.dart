@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-abstract class FluteNavigationProvider {
+abstract class FluteNavigationService {
   final GlobalKey<NavigatorState> key = GlobalKey<NavigatorState>();
 
   NavigatorState get state => key.currentState!;

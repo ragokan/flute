@@ -6,10 +6,10 @@ import '../../../flute.dart';
 typedef OnError = void Function(
     DioError error, ErrorInterceptorHandler handler);
 
-class FluteApiProvider {
+class FluteApiService {
   final String? _endPoint;
 
-  const FluteApiProvider([this._endPoint]);
+  const FluteApiService([this._endPoint]);
 
   Future<Response<T>> get<T>(
     String path, {

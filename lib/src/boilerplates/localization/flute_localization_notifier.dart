@@ -27,11 +27,11 @@ import 'flute_language_base.dart';
 ///       };
 /// }
 /// ```
-abstract class FluteLocalizationProvider<T extends FluteLanguageBase>
+abstract class FluteLocalizationNotifier<T extends FluteLanguageBase>
     extends FluteNotifier<T> {
   final String kLocaleKey = 'kLocaleKey';
 
-  FluteLocalizationProvider(T language) : super(language) {
+  FluteLocalizationNotifier(T language) : super(language) {
     // Get data from save
     setLocale(FluteStorage.get<String>('locale'));
   }

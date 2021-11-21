@@ -1,11 +1,12 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+
+part 'status_notifier.dart';
 
 typedef _UpdateCallback<T> = T Function(T state);
 typedef _ListenerCallback<T> = void Function(T state);
 
-abstract class FluteNotifier<T> {
+class FluteNotifier<T> {
   FluteNotifier(this._state);
 
   T _state;
@@ -16,7 +17,6 @@ abstract class FluteNotifier<T> {
 
   Stream<T> get stream => _streamController.stream;
 
-  @protected
   void emit(T newState) {
     try {
       assert(!_streamController.isClosed,
