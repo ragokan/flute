@@ -1,66 +1,61 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 typedef _UpdateCallback<T> = T Function(T state);
 typedef _ListenerCallback<T> = void Function(T state);
 
-class FluteNotifier<T> extends ChangeNotifier {
+abstract class FluteNotifier<T> {
   FluteNotifier(this._state);
 
   T _state;
 
-  /// The state which immutable.
   T get state => _state;
 
-  /// To set the [state], you can use [emit] method.
-  ///
-  /// Example:
-  ///
-  /// ```dart
-  /// counterProvider.set(1);
-  /// ```
+  final StreamController<T> _streamController = StreamController<T>.broadcast();
+
+  Stream<T> get stream => _streamController.stream;
+
+  @protected
   void emit(T newState) {
-    if (identical(state, newState)) return;
-    _state = newState;
-    notifyListeners();
+    try {
+      assert(!_streamController.isClosed,
+          'Tried to use $runtimeType after dispose.');
+      if (identical(newState, _state)) return;
+      _state = state;
+      _streamController.add(_state);
+    } catch (error, stackTrace) {
+      onError(error, stackTrace);
+      rethrow;
+    }
   }
 
-  /// To update the [state], you can use [update] method.
-  ///
-  /// Example:
-  ///
-  /// ```dart
-  /// counterProvider.update((state) => state + 1);
-  /// ```
   void update(_UpdateCallback<T> callback) => emit(callback(_state));
 
-  /// Listens the state changes, similar to [addListener] and [removeListener]
-  /// but it has access to the state.
-  ///
-  /// Example:
-  ///
-  /// ```dart
-  /// final removeListener = counterProvider.listen((state) {
-  ///   // This function is called whenever state changes.
-  ///   debugPrint(state);
-  ///  });
-  ///
-  /// // Call removeListener whenever you finish your job, maybe on dispose.
-  /// removeListener();
-  /// ```
-  Function listen(
+  StreamSubscription<T> listen(
     _ListenerCallback<T> listener, {
     bool callImmediately = true,
   }) {
-    void _listener() {
+    if (callImmediately) {
       listener(_state);
     }
+    return stream.listen(listener);
+  }
 
-    addListener(_listener);
+  @mustCallSuper
+  void onChange(T change) {}
 
-    if (callImmediately) {
-      _listener();
-    }
+  @mustCallSuper
+  void addError(Object error, [StackTrace? stackTrace]) {
+    onError(error, stackTrace ?? StackTrace.current);
+  }
 
-    return () => removeListener(_listener);
+  @protected
+  @mustCallSuper
+  void onError(Object error, StackTrace stackTrace) {}
+
+  @mustCallSuper
+  Future<void> dispose() async {
+    await _streamController.close();
   }
 }

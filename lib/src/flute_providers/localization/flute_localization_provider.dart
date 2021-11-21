@@ -28,7 +28,7 @@ import 'flute_language_base.dart';
 /// }
 /// ```
 abstract class FluteLocalizationProvider<T extends FluteLanguageBase>
-    extends FluteStateNotifier<T> {
+    extends FluteNotifier<T> {
   final String kLocaleKey = 'kLocaleKey';
 
   FluteLocalizationProvider(T language) : super(language) {
@@ -49,7 +49,7 @@ abstract class FluteLocalizationProvider<T extends FluteLanguageBase>
   // Set new locale
   void setLocale(String? newLocale) {
     if (newLocale == null || newLocale == locale) return;
-    set(locales[newLocale]!);
+    emit(locales[newLocale]!);
     FluteStorage.put(kLocaleKey, newLocale);
   }
 }

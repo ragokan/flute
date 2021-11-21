@@ -17,9 +17,7 @@ mixin StatusProvider<X extends FluteNotifier<S>, S> on FluteNotifier<S> {
   void setStatus(Status newStatus, {bool shouldNotify = true}) {
     if (_status == newStatus) return;
     _status = newStatus;
-    if (shouldNotify) {
-      notifyListeners();
-    }
+    if (shouldNotify) {}
   }
 
   T when<T>({

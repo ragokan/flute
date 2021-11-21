@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../flute.dart';
 
-abstract class FluteThemeProvider extends FluteStateNotifier<ThemeData> {
+abstract class FluteThemeProvider extends FluteNotifier<ThemeData> {
   FluteThemeProvider(ThemeData state) : super(state);
 
   void setMode(ThemeMode mode) {
@@ -10,7 +10,7 @@ abstract class FluteThemeProvider extends FluteStateNotifier<ThemeData> {
     if (state == newState) {
       return;
     }
-    set(newState);
+    emit(newState);
   }
 
   ThemeData get lightThemeData;
