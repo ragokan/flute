@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flute/src/notifiers/models/change_model.dart';
 import 'package:flutter/material.dart';
 
 part 'status_notifier.dart';
@@ -18,19 +19,22 @@ class FluteNotifier<State> {
 
   Stream<State> get stream => _streamController.stream;
 
+  @protected
+  @mustCallSuper
   void emit(State newState) {
     try {
       assert(!_streamController.isClosed,
-          'Stateried to use $runtimeType after dispose.');
+          'Tried to use $runtimeType after dispose.');
       if (identical(newState, _state)) return;
-      _state = state;
-      _streamController.add(_state);
+      onChange(Change(currentState: _state, nextState: newState));
     } catch (error, stackStaterace) {
       onError(error, stackStaterace);
       rethrow;
     }
   }
 
+  @protected
+  @mustCallSuper
   void update(_UpdateCallback<State> callback) => emit(callback(_state));
 
   StreamSubscription<State> listen(
@@ -43,9 +47,14 @@ class FluteNotifier<State> {
     return stream.listen(listener);
   }
 
+  @protected
   @mustCallSuper
-  void onChange(State change) {}
+  void onChange(Change<State> change) {
+    _state = change.nextState;
+    _streamController.add(_state);
+  }
 
+  @protected
   @mustCallSuper
   void addError(Object error, [StackTrace? stackStaterace]) {
     onError(error, stackStaterace ?? StackTrace.current);
@@ -57,6 +66,8 @@ class FluteNotifier<State> {
 
   @mustCallSuper
   Future<void> dispose() async {
+    assert(!_streamController.isClosed,
+        'Tried to dispose $runtimeType after dispose.');
     await _streamController.close();
   }
 }
