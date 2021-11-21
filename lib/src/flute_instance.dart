@@ -1,5 +1,4 @@
 import '../flute.dart';
-import 'flute_utilities/index.dart';
 
 /// The implementation of [Flute].
 ///
