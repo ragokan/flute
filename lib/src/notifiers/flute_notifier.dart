@@ -48,7 +48,7 @@ class FluteNotifier<State> {
   /// Instead, just check if they are identicial or not.
   @protected
   @mustCallSuper
-  void emitSliently(State newState) {
+  void emitSilently(State newState) {
     try {
       assert(!_streamController.isClosed,
           'Tried to use $runtimeType after dispose.');
