@@ -44,6 +44,23 @@ class FluteNotifier<State> {
     }
   }
 
+  /// Emits the state silently, without notifying the controller.
+  /// Instead, just check if they are identicial or not.
+  @protected
+  @mustCallSuper
+  void emitSliently(State newState) {
+    try {
+      assert(!_streamController.isClosed,
+          'Tried to use $runtimeType after dispose.');
+      if (identical(newState, _state)) return;
+      onChange(Change(currentState: _state, nextState: newState));
+      _state = newState;
+    } catch (error, stackStaterace) {
+      onError(error, stackStaterace);
+      rethrow;
+    }
+  }
+
   @protected
   @mustCallSuper
   void update(_UpdateCallback<State> callback) => emit(callback(_state));
