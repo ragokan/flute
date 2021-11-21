@@ -19,8 +19,3 @@ export 'src/provider/index.dart';
 export 'src/storage/index.dart';
 export 'src/utilities/index.dart';
 export 'src/other/index.dart';
-
-
-/// Formlara bir şeyler yapalım.
-/// Validatörler yapalım
-/// Validate için for loop atalım.

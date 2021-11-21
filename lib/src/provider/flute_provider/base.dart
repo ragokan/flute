@@ -2,8 +2,8 @@
 
 part of '../flute_provider.dart';
 
-abstract class FluteNotifierProviderRef<Notifier extends FluteNotifier?>
-    implements Ref {
+abstract class FluteNotifierProviderRef<Notifier extends FluteNotifier<State>?,
+    State> implements Ref {
   Notifier get notifier;
 }
 
@@ -15,12 +15,12 @@ class FluteNotifierProvider<Notifier extends FluteNotifier<State>?, State>
         OverrideWithProviderMixin<Notifier,
             FluteNotifierProvider<Notifier, State>> {
   FluteNotifierProvider(
-    Create<Notifier, FluteNotifierProviderRef<Notifier>> create, {
+    Create<Notifier, FluteNotifierProviderRef<Notifier, State>> create, {
     String? name,
     List<ProviderOrFamily>? dependencies,
     Family? from,
     Object? argument,
-  })  : notifier = _NotifierProvider<Notifier>(
+  })  : notifier = _NotifierProvider<Notifier, State>(
           create,
           name: name,
           dependencies: dependencies,
@@ -55,7 +55,7 @@ class FluteNotifierProvider<Notifier extends FluteNotifier<State>?, State>
   bool updateShouldNotify(Notifier previousState, Notifier newState) => true;
 }
 
-class _NotifierProvider<Notifier extends FluteNotifier?>
+class _NotifierProvider<Notifier extends FluteNotifier<State>?, State>
     extends AlwaysAliveProviderBase<Notifier> {
   _NotifierProvider(
     this._create, {
@@ -72,10 +72,10 @@ class _NotifierProvider<Notifier extends FluteNotifier?>
   @override
   final List<ProviderOrFamily>? dependencies;
 
-  final Create<Notifier, FluteNotifierProviderRef<Notifier>> _create;
+  final Create<Notifier, FluteNotifierProviderRef<Notifier, State>> _create;
 
   @override
-  Notifier create(covariant FluteNotifierProviderRef<Notifier> ref) {
+  Notifier create(covariant FluteNotifierProviderRef<Notifier, State> ref) {
     final notifier = _create(ref);
     if (notifier != null) ref.onDispose(notifier.dispose);
 
@@ -83,18 +83,18 @@ class _NotifierProvider<Notifier extends FluteNotifier?>
   }
 
   @override
-  _NotifierProviderElement<Notifier> createElement() {
-    return _NotifierProviderElement<Notifier>(this);
+  _NotifierProviderElement<Notifier, State> createElement() {
+    return _NotifierProviderElement<Notifier, State>(this);
   }
 
   @override
   bool updateShouldNotify(Notifier previousState, Notifier newState) => true;
 }
 
-class _NotifierProviderElement<Notifier extends FluteNotifier?>
+class _NotifierProviderElement<Notifier extends FluteNotifier<State>?, State>
     extends ProviderElementBase<Notifier>
-    implements FluteNotifierProviderRef<Notifier> {
-  _NotifierProviderElement(_NotifierProvider<Notifier> provider)
+    implements FluteNotifierProviderRef<Notifier, State> {
+  _NotifierProviderElement(_NotifierProvider<Notifier, State> provider)
       : super(provider);
 
   @override
@@ -110,7 +110,8 @@ class FluteNotifierProviderFamily<Notifier extends FluteNotifier<State>?, State,
     List<ProviderOrFamily>? dependencies,
   }) : super(name: name, dependencies: dependencies);
 
-  final FamilyCreate<Notifier, FluteNotifierProviderRef<Notifier>, Arg> _create;
+  final FamilyCreate<Notifier, FluteNotifierProviderRef<Notifier, State>, Arg>
+      _create;
 
   @override
   FluteNotifierProvider<Notifier, State> create(Arg argument) {

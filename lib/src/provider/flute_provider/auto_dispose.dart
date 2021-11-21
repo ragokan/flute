@@ -1,7 +1,7 @@
 // ignore_for_file: subtype_of_sealed_class
 part of '../flute_provider.dart';
 
-abstract class AutoDisposeFluteNotifierProviderRef<Notifier>
+abstract class AutoDisposeFluteNotifierProviderRef<Notifier, State>
     implements AutoDisposeRef {
   Notifier get notifier;
 }
@@ -14,12 +14,13 @@ class AutoDisposeFluteNotifierProvider<Notifier extends FluteNotifier<State>?,
         OverrideWithProviderMixin<Notifier,
             AutoDisposeFluteNotifierProvider<Notifier, State>> {
   AutoDisposeFluteNotifierProvider(
-    Create<Notifier, AutoDisposeFluteNotifierProviderRef<Notifier>> create, {
+    Create<Notifier, AutoDisposeFluteNotifierProviderRef<Notifier, State>>
+        create, {
     String? name,
     List<ProviderOrFamily>? dependencies,
     Family? from,
     Object? argument,
-  })  : notifier = _AutoDisposeNotifierProvider<Notifier>(
+  })  : notifier = _AutoDisposeNotifierProvider<Notifier, State>(
           create,
           name: modifierName(name, 'notifier'),
           dependencies: dependencies,
@@ -51,8 +52,8 @@ class AutoDisposeFluteNotifierProvider<Notifier extends FluteNotifier<State>?,
       AutoDisposeProviderElement(this);
 }
 
-class _AutoDisposeNotifierProvider<Notifier extends FluteNotifier?>
-    extends AutoDisposeProviderBase<Notifier> {
+class _AutoDisposeNotifierProvider<Notifier extends FluteNotifier<State>?,
+    State> extends AutoDisposeProviderBase<Notifier> {
   _AutoDisposeNotifierProvider(
     this._create, {
     required String? name,
@@ -68,11 +69,12 @@ class _AutoDisposeNotifierProvider<Notifier extends FluteNotifier?>
   @override
   final List<ProviderOrFamily>? dependencies;
 
-  final Create<Notifier, AutoDisposeFluteNotifierProviderRef<Notifier>> _create;
+  final Create<Notifier, AutoDisposeFluteNotifierProviderRef<Notifier, State>>
+      _create;
 
   @override
   Notifier create(
-    covariant AutoDisposeFluteNotifierProviderRef<Notifier> ref,
+    covariant AutoDisposeFluteNotifierProviderRef<Notifier, State> ref,
   ) {
     final notifier = _create(ref);
     if (notifier != null) ref.onDispose(notifier.dispose);
@@ -81,19 +83,20 @@ class _AutoDisposeNotifierProvider<Notifier extends FluteNotifier?>
   }
 
   @override
-  _AutoDisposeNotifierProviderElement<Notifier> createElement() {
-    return _AutoDisposeNotifierProviderElement<Notifier>(this);
+  _AutoDisposeNotifierProviderElement<Notifier, State> createElement() {
+    return _AutoDisposeNotifierProviderElement<Notifier, State>(this);
   }
 
   @override
   bool updateShouldNotify(Notifier previousState, Notifier newState) => true;
 }
 
-class _AutoDisposeNotifierProviderElement<Notifier extends FluteNotifier?>
-    extends AutoDisposeProviderElementBase<Notifier>
-    implements AutoDisposeFluteNotifierProviderRef<Notifier> {
+class _AutoDisposeNotifierProviderElement<
+        Notifier extends FluteNotifier<State>?,
+        State> extends AutoDisposeProviderElementBase<Notifier>
+    implements AutoDisposeFluteNotifierProviderRef<Notifier, State> {
   _AutoDisposeNotifierProviderElement(
-      _AutoDisposeNotifierProvider<Notifier> provider)
+      _AutoDisposeNotifierProvider<Notifier, State> provider)
       : super(provider);
 
   @override
@@ -111,8 +114,8 @@ class AutoDisposeFluteNotifierProviderFamily<
     List<ProviderOrFamily>? dependencies,
   }) : super(name: name, dependencies: dependencies);
 
-  final FamilyCreate<Notifier, AutoDisposeFluteNotifierProviderRef<Notifier>,
-      Arg> _create;
+  final FamilyCreate<Notifier,
+      AutoDisposeFluteNotifierProviderRef<Notifier, State>, Arg> _create;
 
   @override
   AutoDisposeFluteNotifierProvider<Notifier, State> create(Arg argument) =>
