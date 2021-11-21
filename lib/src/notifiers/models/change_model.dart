@@ -10,6 +10,12 @@ class Change<State> {
   /// The next [State] at the time of the [Change].
   final State nextState;
 
+  /// Better than writing
+  /// ```dart
+  /// change.currentState == change.nextState
+  /// ```
+  bool get isEqual => currentState == nextState;
+
   /// Better string output.
   @override
   String toString() =>
