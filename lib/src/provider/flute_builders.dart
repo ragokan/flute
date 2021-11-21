@@ -2,6 +2,7 @@
 
 import 'index.dart';
 import '../../flute.dart';
+import './flute_provider.dart';
 
 import 'package:riverpod/riverpod.dart';
 

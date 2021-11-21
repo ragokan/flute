@@ -1,5 +1,1 @@
-export './flute_provider.dart';
-
-import 'package:flute/flute.dart';
-
-final counterNotifier = FluteNotifierProvider((_) => FluteNotifier<int>(0));
+export './flute_provider.dart' show FluteNotifierProvider;

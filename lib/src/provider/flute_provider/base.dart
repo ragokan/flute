@@ -114,14 +114,13 @@ class FluteNotifierProviderFamily<Notifier extends FluteNotifier<State>?, State,
       _create;
 
   @override
-  FluteNotifierProvider<Notifier, State> create(Arg argument) {
-    return FluteNotifierProvider<Notifier, State>(
-      (ref) => _create(ref, argument),
-      name: name,
-      from: this,
-      argument: argument,
-    );
-  }
+  FluteNotifierProvider<Notifier, State> create(Arg argument) =>
+      FluteNotifierProvider<Notifier, State>(
+        (ref) => _create(ref, argument),
+        name: name,
+        from: this,
+        argument: argument,
+      );
 
   @override
   void setupOverride(Arg argument, SetupOverride setup) {
@@ -133,15 +132,14 @@ class FluteNotifierProviderFamily<Notifier extends FluteNotifier<State>?, State,
 
   Override overrideWithProvider(
     FluteNotifierProvider<Notifier, State> Function(Arg argument) override,
-  ) {
-    return FamilyOverride<Arg>(
-      this,
-      (arg, setup) {
-        final provider = call(arg);
+  ) =>
+      FamilyOverride<Arg>(
+        this,
+        (arg, setup) {
+          final provider = call(arg);
 
-        setup(origin: provider.notifier, override: override(arg).notifier);
-        setup(origin: provider, override: provider);
-      },
-    );
-  }
+          setup(origin: provider.notifier, override: override(arg).notifier);
+          setup(origin: provider, override: provider);
+        },
+      );
 }
