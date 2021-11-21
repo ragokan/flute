@@ -15,6 +15,7 @@ export 'src/extensions/index.dart';
 export 'src/flute_instance.dart';
 export 'src/notifiers/index.dart';
 export 'src/boilerplates/index.dart';
+export 'src/provider/index.dart';
 export 'src/storage/index.dart';
 export 'src/utilities/index.dart';
 export 'src/other/index.dart';
