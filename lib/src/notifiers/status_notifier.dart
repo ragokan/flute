@@ -7,9 +7,11 @@ enum Status {
   error,
 }
 
-typedef _StatusCallback<T, X extends FluteNotifier<S>, S> = T Function(S state);
+typedef _StatusCallback<T, X extends FluteNotifier<State>, State> = T Function(
+    State state);
 
-mixin StatusNotifier<X extends FluteNotifier<S>, S> on FluteNotifier<S> {
+mixin StatusNotifier<X extends FluteNotifier<State>, State>
+    on FluteNotifier<State> {
   Status _status = Status.initial;
 
   Status get status => _status;
@@ -23,10 +25,10 @@ mixin StatusNotifier<X extends FluteNotifier<S>, S> on FluteNotifier<S> {
   }
 
   T when<T>({
-    required _StatusCallback<T, X, S> initial,
-    required _StatusCallback<T, X, S> loading,
-    required _StatusCallback<T, X, S> done,
-    required _StatusCallback<T, X, S> error,
+    required _StatusCallback<T, X, State> initial,
+    required _StatusCallback<T, X, State> loading,
+    required _StatusCallback<T, X, State> done,
+    required _StatusCallback<T, X, State> error,
   }) {
     switch (_status) {
       case Status.initial:

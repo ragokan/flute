@@ -7,7 +7,7 @@ abstract class AutoDisposeFluteNotifierProviderRef<Notifier, State>
 }
 
 @sealed
-class AutoDisposeFluteNotifierProvider<Notifier extends FluteNotifier<State>?,
+class AutoDisposeFluteNotifierProvider<Notifier extends FluteNotifier<State>,
         State> extends AutoDisposeProviderBase<Notifier>
     with
         FluteNotifierProviderOverrideMixin<Notifier, State>,
@@ -52,8 +52,8 @@ class AutoDisposeFluteNotifierProvider<Notifier extends FluteNotifier<State>?,
       AutoDisposeProviderElement(this);
 }
 
-class _AutoDisposeNotifierProvider<Notifier extends FluteNotifier<State>?,
-    State> extends AutoDisposeProviderBase<Notifier> {
+class _AutoDisposeNotifierProvider<Notifier extends FluteNotifier<State>, State>
+    extends AutoDisposeProviderBase<Notifier> {
   _AutoDisposeNotifierProvider(
     this._create, {
     required String? name,
@@ -77,7 +77,7 @@ class _AutoDisposeNotifierProvider<Notifier extends FluteNotifier<State>?,
     covariant AutoDisposeFluteNotifierProviderRef<Notifier, State> ref,
   ) {
     final notifier = _create(ref);
-    if (notifier != null) ref.onDispose(notifier.dispose);
+    ref.onDispose(notifier.dispose);
 
     return notifier;
   }
@@ -91,8 +91,7 @@ class _AutoDisposeNotifierProvider<Notifier extends FluteNotifier<State>?,
   bool updateShouldNotify(Notifier previousState, Notifier newState) => true;
 }
 
-class _AutoDisposeNotifierProviderElement<
-        Notifier extends FluteNotifier<State>?,
+class _AutoDisposeNotifierProviderElement<Notifier extends FluteNotifier<State>,
         State> extends AutoDisposeProviderElementBase<Notifier>
     implements AutoDisposeFluteNotifierProviderRef<Notifier, State> {
   _AutoDisposeNotifierProviderElement(
@@ -105,7 +104,7 @@ class _AutoDisposeNotifierProviderElement<
 
 @sealed
 class AutoDisposeFluteNotifierProviderFamily<
-        Notifier extends FluteNotifier<State>?, State, Arg>
+        Notifier extends FluteNotifier<State>, State, Arg>
     extends Family<Notifier, Arg,
         AutoDisposeFluteNotifierProvider<Notifier, State>> {
   AutoDisposeFluteNotifierProviderFamily(

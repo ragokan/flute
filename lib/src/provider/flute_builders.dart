@@ -13,7 +13,7 @@ class FluteNotifierProviderBuilder {
   const FluteNotifierProviderBuilder();
 
   FluteNotifierProvider<Notifier, State>
-      call<Notifier extends FluteNotifier<State>?, State>(
+      call<Notifier extends FluteNotifier<State>, State>(
     Create<Notifier, FluteNotifierProviderRef<Notifier, State>> create, {
     String? name,
     List<ProviderOrFamily>? dependencies,
@@ -35,7 +35,7 @@ class FluteNotifierProviderFamilyBuilder {
   const FluteNotifierProviderFamilyBuilder();
 
   FluteNotifierProviderFamily<Notifier, State, Arg>
-      call<Notifier extends FluteNotifier<State>?, State, Arg>(
+      call<Notifier extends FluteNotifier<State>, State, Arg>(
     FamilyCreate<Notifier, FluteNotifierProviderRef<Notifier, State>, Arg>
         create, {
     String? name,
@@ -55,7 +55,7 @@ class AutoDisposeFluteNotifierProviderBuilder {
   const AutoDisposeFluteNotifierProviderBuilder();
 
   AutoDisposeFluteNotifierProvider<Notifier, State>
-      call<Notifier extends FluteNotifier<State>?, State>(
+      call<Notifier extends FluteNotifier<State>, State>(
     Create<Notifier, AutoDisposeFluteNotifierProviderRef<Notifier, State>>
         create, {
     String? name,
@@ -75,7 +75,7 @@ class AutoDisposeFluteNotifierProviderFamilyBuilder {
   const AutoDisposeFluteNotifierProviderFamilyBuilder();
 
   AutoDisposeFluteNotifierProviderFamily<Notifier, State, Arg>
-      call<Notifier extends FluteNotifier<State>?, State, Arg>(
+      call<Notifier extends FluteNotifier<State>, State, Arg>(
     FamilyCreate<Notifier, AutoDisposeFluteNotifierProviderRef<Notifier, State>,
             Arg>
         create, {

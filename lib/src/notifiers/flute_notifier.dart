@@ -3,37 +3,38 @@ import 'package:flutter/material.dart';
 
 part 'status_notifier.dart';
 
-typedef _UpdateCallback<T> = T Function(T state);
-typedef _ListenerCallback<T> = void Function(T state);
+typedef _UpdateCallback<State> = State Function(State state);
+typedef _ListenerCallback<State> = void Function(State state);
 
-class FluteNotifier<T> {
+class FluteNotifier<State> {
   FluteNotifier(this._state);
 
-  T _state;
+  State _state;
 
-  T get state => _state;
+  State get state => _state;
 
-  final StreamController<T> _streamController = StreamController<T>.broadcast();
+  final StreamController<State> _streamController =
+      StreamController<State>.broadcast();
 
-  Stream<T> get stream => _streamController.stream;
+  Stream<State> get stream => _streamController.stream;
 
-  void emit(T newState) {
+  void emit(State newState) {
     try {
       assert(!_streamController.isClosed,
-          'Tried to use $runtimeType after dispose.');
+          'Stateried to use $runtimeType after dispose.');
       if (identical(newState, _state)) return;
       _state = state;
       _streamController.add(_state);
-    } catch (error, stackTrace) {
-      onError(error, stackTrace);
+    } catch (error, stackStaterace) {
+      onError(error, stackStaterace);
       rethrow;
     }
   }
 
-  void update(_UpdateCallback<T> callback) => emit(callback(_state));
+  void update(_UpdateCallback<State> callback) => emit(callback(_state));
 
-  StreamSubscription<T> listen(
-    _ListenerCallback<T> listener, {
+  StreamSubscription<State> listen(
+    _ListenerCallback<State> listener, {
     bool callImmediately = true,
   }) {
     if (callImmediately) {
@@ -43,16 +44,16 @@ class FluteNotifier<T> {
   }
 
   @mustCallSuper
-  void onChange(T change) {}
+  void onChange(State change) {}
 
   @mustCallSuper
-  void addError(Object error, [StackTrace? stackTrace]) {
-    onError(error, stackTrace ?? StackTrace.current);
+  void addError(Object error, [StackTrace? stackStaterace]) {
+    onError(error, stackStaterace ?? StackTrace.current);
   }
 
   @protected
   @mustCallSuper
-  void onError(Object error, StackTrace stackTrace) {}
+  void onError(Object error, StackTrace stackStaterace) {}
 
   @mustCallSuper
   Future<void> dispose() async {

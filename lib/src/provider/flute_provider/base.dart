@@ -2,13 +2,13 @@
 
 part of '../flute_provider.dart';
 
-abstract class FluteNotifierProviderRef<Notifier extends FluteNotifier<State>?,
+abstract class FluteNotifierProviderRef<Notifier extends FluteNotifier<State>,
     State> implements Ref {
   Notifier get notifier;
 }
 
 @sealed
-class FluteNotifierProvider<Notifier extends FluteNotifier<State>?, State>
+class FluteNotifierProvider<Notifier extends FluteNotifier<State>, State>
     extends AlwaysAliveProviderBase<Notifier>
     with
         FluteNotifierProviderOverrideMixin<Notifier, State>,
@@ -55,7 +55,7 @@ class FluteNotifierProvider<Notifier extends FluteNotifier<State>?, State>
   bool updateShouldNotify(Notifier previousState, Notifier newState) => true;
 }
 
-class _NotifierProvider<Notifier extends FluteNotifier<State>?, State>
+class _NotifierProvider<Notifier extends FluteNotifier<State>, State>
     extends AlwaysAliveProviderBase<Notifier> {
   _NotifierProvider(
     this._create, {
@@ -77,7 +77,7 @@ class _NotifierProvider<Notifier extends FluteNotifier<State>?, State>
   @override
   Notifier create(covariant FluteNotifierProviderRef<Notifier, State> ref) {
     final notifier = _create(ref);
-    if (notifier != null) ref.onDispose(notifier.dispose);
+    ref.onDispose(notifier.dispose);
 
     return notifier;
   }
@@ -91,7 +91,7 @@ class _NotifierProvider<Notifier extends FluteNotifier<State>?, State>
   bool updateShouldNotify(Notifier previousState, Notifier newState) => true;
 }
 
-class _NotifierProviderElement<Notifier extends FluteNotifier<State>?, State>
+class _NotifierProviderElement<Notifier extends FluteNotifier<State>, State>
     extends ProviderElementBase<Notifier>
     implements FluteNotifierProviderRef<Notifier, State> {
   _NotifierProviderElement(_NotifierProvider<Notifier, State> provider)
@@ -102,7 +102,7 @@ class _NotifierProviderElement<Notifier extends FluteNotifier<State>?, State>
 }
 
 @sealed
-class FluteNotifierProviderFamily<Notifier extends FluteNotifier<State>?, State,
+class FluteNotifierProviderFamily<Notifier extends FluteNotifier<State>, State,
     Arg> extends Family<Notifier, Arg, FluteNotifierProvider<Notifier, State>> {
   FluteNotifierProviderFamily(
     this._create, {
