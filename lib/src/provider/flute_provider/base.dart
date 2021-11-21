@@ -42,7 +42,7 @@ class FluteNotifierProvider<Notifier extends FluteNotifier<State>, State>
   @override
   State create(ProviderElementBase<State> ref) {
     final notifier = ref.watch(this.notifier);
-    _listenNotifier(notifier, ref);
+    _listenFluteNotifier(notifier, ref);
     return notifier.state;
   }
 

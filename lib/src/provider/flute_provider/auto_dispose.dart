@@ -40,7 +40,7 @@ class AutoDisposeFluteNotifierProvider<Notifier extends FluteNotifier<State>,
   @override
   State create(AutoDisposeProviderElementBase<State> ref) {
     final notifier = ref.watch(this.notifier);
-    _listenNotifier(notifier, ref);
+    _listenFluteNotifier(notifier, ref);
     return notifier.state;
   }
 

@@ -14,7 +14,7 @@ import './flute_builders.dart';
 part 'flute_provider/base.dart';
 part 'flute_provider/auto_dispose.dart';
 
-Notifier _listenNotifier<Notifier extends FluteNotifier<State>, State>(
+Notifier _listenFluteNotifier<Notifier extends FluteNotifier<State>, State>(
   Notifier notifier,
   ProviderElementBase<State> ref,
 ) {
@@ -29,6 +29,9 @@ mixin FluteNotifierProviderOverrideMixin<Notifier extends FluteNotifier<State>,
 
   @override
   late final List<ProviderOrFamily>? dependencies = [notifier];
+
+  @override
+  ProviderBase<FluteNotifier<State>> get originProvider => notifier;
 
   Override overrideWithValue(Notifier value) => ProviderOverride(
         origin: notifier,
