@@ -8,7 +8,7 @@ abstract class AutoDisposeFluteNotifierProviderRef<Notifier, State>
 
 @sealed
 class AutoDisposeFluteNotifierProvider<Notifier extends FluteNotifier<State>,
-        State> extends AutoDisposeProviderBase<Notifier>
+        State> extends AutoDisposeProviderBase<State>
     with
         FluteNotifierProviderOverrideMixin<Notifier, State>,
         OverrideWithProviderMixin<Notifier,
@@ -38,17 +38,17 @@ class AutoDisposeFluteNotifierProvider<Notifier extends FluteNotifier<State>,
   final AutoDisposeProviderBase<Notifier> notifier;
 
   @override
-  Notifier create(AutoDisposeProviderElementBase<Notifier> ref) {
-    final notifier = ref.watch<Notifier>(this.notifier);
+  State create(AutoDisposeProviderElementBase<State> ref) {
+    final notifier = ref.watch(this.notifier);
     _listenNotifier(notifier, ref);
-    return notifier;
+    return notifier.state;
   }
 
   @override
-  bool updateShouldNotify(Notifier previousState, Notifier newState) => true;
+  bool updateShouldNotify(State previousState, State newState) => true;
 
   @override
-  AutoDisposeProviderElement<Notifier> createElement() =>
+  AutoDisposeProviderElement<State> createElement() =>
       AutoDisposeProviderElement(this);
 }
 
@@ -105,7 +105,7 @@ class _AutoDisposeNotifierProviderElement<Notifier extends FluteNotifier<State>,
 @sealed
 class AutoDisposeFluteNotifierProviderFamily<
         Notifier extends FluteNotifier<State>, State, Arg>
-    extends Family<Notifier, Arg,
+    extends Family<State, Arg,
         AutoDisposeFluteNotifierProvider<Notifier, State>> {
   AutoDisposeFluteNotifierProviderFamily(
     this._create, {

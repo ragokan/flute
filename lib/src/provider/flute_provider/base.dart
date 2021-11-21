@@ -9,7 +9,7 @@ abstract class FluteNotifierProviderRef<Notifier extends FluteNotifier<State>,
 
 @sealed
 class FluteNotifierProvider<Notifier extends FluteNotifier<State>, State>
-    extends AlwaysAliveProviderBase<Notifier>
+    extends AlwaysAliveProviderBase<State>
     with
         FluteNotifierProviderOverrideMixin<Notifier, State>,
         OverrideWithProviderMixin<Notifier,
@@ -40,19 +40,19 @@ class FluteNotifierProvider<Notifier extends FluteNotifier<State>, State>
   final AlwaysAliveProviderBase<Notifier> notifier;
 
   @override
-  Notifier create(ProviderElementBase<Notifier> ref) {
-    final notifier = ref.watch<Notifier>(this.notifier);
+  State create(ProviderElementBase<State> ref) {
+    final notifier = ref.watch(this.notifier);
     _listenNotifier(notifier, ref);
-    return notifier;
+    return notifier.state;
   }
 
   @override
-  ProviderElement<Notifier> createElement() {
+  ProviderElement<State> createElement() {
     return ProviderElement(this);
   }
 
   @override
-  bool updateShouldNotify(Notifier previousState, Notifier newState) => true;
+  bool updateShouldNotify(State previousState, State newState) => true;
 }
 
 class _NotifierProvider<Notifier extends FluteNotifier<State>, State>
@@ -103,7 +103,7 @@ class _NotifierProviderElement<Notifier extends FluteNotifier<State>, State>
 
 @sealed
 class FluteNotifierProviderFamily<Notifier extends FluteNotifier<State>, State,
-    Arg> extends Family<Notifier, Arg, FluteNotifierProvider<Notifier, State>> {
+    Arg> extends Family<State, Arg, FluteNotifierProvider<Notifier, State>> {
   FluteNotifierProviderFamily(
     this._create, {
     String? name,

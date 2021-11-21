@@ -16,15 +16,15 @@ part 'flute_provider/auto_dispose.dart';
 
 Notifier _listenNotifier<Notifier extends FluteNotifier<State>, State>(
   Notifier notifier,
-  ProviderElementBase<Notifier> ref,
+  ProviderElementBase<State> ref,
 ) {
-  final _listener = notifier.stream.listen((_) => ref.setState(notifier));
+  final _listener = notifier.stream.listen(ref.setState);
   ref.onDispose(_listener.cancel);
   return notifier;
 }
 
 mixin FluteNotifierProviderOverrideMixin<Notifier extends FluteNotifier<State>,
-    State> on ProviderBase<Notifier> {
+    State> on ProviderBase<State> {
   ProviderBase<Notifier> get notifier;
 
   @override
