@@ -41,9 +41,9 @@ class FluteNotifierProvider<Notifier extends FluteNotifier<State>, State>
 
   @override
   State create(ProviderElementBase<State> ref) {
-    final notifier = ref.watch(this.notifier);
-    _listenFluteNotifier(notifier, ref);
-    return notifier.state;
+    final _notifier = ref.watch(notifier);
+    _listenFluteNotifier(_notifier, ref);
+    return _notifier.state;
   }
 
   @override
@@ -76,16 +76,16 @@ class _NotifierProvider<Notifier extends FluteNotifier<State>, State>
 
   @override
   Notifier create(covariant FluteNotifierProviderRef<Notifier, State> ref) {
-    final notifier = _create(ref);
-    ref.onDispose(notifier.dispose);
+    final _notifier = _create(ref);
 
-    return notifier;
+    ref.onDispose(_notifier.dispose);
+
+    return _notifier;
   }
 
   @override
-  _NotifierProviderElement<Notifier, State> createElement() {
-    return _NotifierProviderElement<Notifier, State>(this);
-  }
+  _NotifierProviderElement<Notifier, State> createElement() =>
+      _NotifierProviderElement<Notifier, State>(this);
 
   @override
   bool updateShouldNotify(Notifier previousState, Notifier newState) => true;
