@@ -10,7 +10,7 @@ typedef _ListenerCallback<State> = void Function(State state);
 /// {@template flute_notifier}
 /// Bloc but with some changes and adaptation for riverpod.
 /// {@endtemplate}
-class FluteNotifier<State> {
+abstract class FluteNotifier<State> {
   /// {@macro flute_notifier}
   FluteNotifier(this._state);
 
@@ -48,12 +48,17 @@ class FluteNotifier<State> {
   /// Instead, just check if they are identicial or not.
   @protected
   @mustCallSuper
-  void emitSilently(State newState) {
+  void emitSilently(
+    State newState, {
+    bool callOnChange = false,
+  }) {
     try {
       assert(!_streamController.isClosed,
           'Tried to use $runtimeType after dispose.');
       if (identical(newState, _state)) return;
-      onChange(Change(currentState: _state, nextState: newState));
+      if (callOnChange) {
+        onChange(Change(currentState: _state, nextState: newState));
+      }
       _state = newState;
     } catch (error, stackStaterace) {
       onError(error, stackStaterace);
