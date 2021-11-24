@@ -28,7 +28,7 @@ mixin StatusNotifier<X extends FluteNotifier<State>, State>
     if (_status == newStatus) return;
     _status = newStatus;
     if (shouldNotify) {
-      _streamController.add(_state);
+      _streamController?.add(_state);
     }
   }
 

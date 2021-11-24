@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 part 'status_notifier.dart';
 
-typedef _UpdateCallback<State> = State Function(State state);
 typedef _ListenerCallback<State> = void Function(State state);
 
 /// {@template flute_notifier}
@@ -20,11 +19,11 @@ abstract class FluteNotifier<State> {
   State get state => _state;
 
   /// Private [StreamController] to notify the listeners.
-  final StreamController<State> _streamController =
-      StreamController<State>.broadcast();
+  StreamController<State>? _streamController;
 
   /// Main way to listen the state changes, also can be used with [StreamBuilder].
-  Stream<State> get stream => _streamController.stream;
+  Stream<State> get stream =>
+      (_streamController ??= StreamController<State>.broadcast()).stream;
 
   /// Emits the state. No equality check because of large data comparisions.
   /// Instead, just check if they are identicial or not.
@@ -32,43 +31,23 @@ abstract class FluteNotifier<State> {
   @mustCallSuper
   void emit(State newState) {
     try {
-      assert(!_streamController.isClosed,
-          'Tried to use $runtimeType after dispose.');
+      assert(() {
+        if (_streamController?.isClosed ?? false) {
+          throw Exception('Tried to use $runtimeType after dispose.');
+        }
+        return true;
+      }());
       if (identical(newState, _state)) return;
       onChange(Change(currentState: _state, nextState: newState));
       _state = newState;
-      _streamController.add(_state);
+      _streamController?.add(_state);
     } catch (error, stackStaterace) {
       onError(error, stackStaterace);
-      rethrow;
+      assert(() {
+        rethrow;
+      }());
     }
   }
-
-  /// Emits the state silently, without notifying the controller.
-  /// Instead, just check if they are identicial or not.
-  @protected
-  @mustCallSuper
-  void emitSilently(
-    State newState, {
-    bool callOnChange = false,
-  }) {
-    try {
-      assert(!_streamController.isClosed,
-          'Tried to use $runtimeType after dispose.');
-      if (identical(newState, _state)) return;
-      if (callOnChange) {
-        onChange(Change(currentState: _state, nextState: newState));
-      }
-      _state = newState;
-    } catch (error, stackStaterace) {
-      onError(error, stackStaterace);
-      rethrow;
-    }
-  }
-
-  @protected
-  @mustCallSuper
-  void update(_UpdateCallback<State> callback) => emit(callback(_state));
 
   /// Regular listen method of stream but with [callImmediately] parameter.
   @mustCallSuper
@@ -102,8 +81,12 @@ abstract class FluteNotifier<State> {
   /// Disposes the notifier, closes the stream.
   @mustCallSuper
   Future<void> dispose() async {
-    assert(!_streamController.isClosed,
-        'Tried to dispose $runtimeType after dispose.');
-    await _streamController.close();
+    assert(() {
+      if (_streamController?.isClosed ?? false) {
+        throw Exception('Tried to dispose $runtimeType after dispose.');
+      }
+      return true;
+    }());
+    await _streamController?.close();
   }
 }
