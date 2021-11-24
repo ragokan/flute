@@ -18,8 +18,8 @@ Notifier _listenFluteNotifier<Notifier extends FluteNotifier<State>, State>(
   Notifier notifier,
   ProviderElementBase<State> ref,
 ) {
-  final _listener = notifier.stream.listen(ref.setState);
-  ref.onDispose(_listener.cancel);
+  final _removeListener = notifier.listen(ref.setState, callImmediately: false);
+  ref.onDispose(_removeListener);
   return notifier;
 }
 
