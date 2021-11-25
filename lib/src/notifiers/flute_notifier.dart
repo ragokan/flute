@@ -51,6 +51,7 @@ abstract class FluteNotifier<State> {
         listener(_state);
       } catch (error, stackTrace) {
         addError(error, stackTrace);
+        _listeners.remove(listener);
       }
     }
 
@@ -85,7 +86,10 @@ abstract class FluteNotifier<State> {
   /// Called whenever error occurs.
   @protected
   @mustCallSuper
-  void onError(Object error, StackTrace stackTrace) {}
+  void onError(Object error, StackTrace stackTrace) {
+    FluteObserver.observer
+        ?.onNotifierError(this, error: error, stackTrace: stackTrace);
+  }
 
   /// Disposes the notifier, removes the listeners.
   @mustCallSuper

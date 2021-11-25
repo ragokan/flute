@@ -20,8 +20,14 @@ class _FluteStorage {
   }) {
     final _stream = _box.watch(key: key).listen((e) => callback(e.value));
 
-    if (callImmediately) {
-      callback(get<T>(key));
+    try {
+      if (callImmediately) {
+        callback(get<T>(key));
+      }
+    } catch (error, stackTrace) {
+      FluteObserver.observer
+          ?.onError('storage-listen', error: error, stackTrace: stackTrace);
+      _stream.cancel();
     }
 
     return _stream.cancel;
@@ -45,8 +51,13 @@ class _FluteStorage {
   ///}
   ///```
   Future<void> init([String boxName = 'flute', String? subDir]) async {
-    await Hive.initFlutter(subDir);
-    _box = await Hive.openBox(boxName);
+    try {
+      await Hive.initFlutter(subDir);
+      _box = await Hive.openBox(boxName);
+    } catch (error, stackTrace) {
+      FluteObserver.observer
+          ?.onError('storage-init', error: error, stackTrace: stackTrace);
+    }
   }
 
   /// Reads the storage, if there are any match with the key, it returns
@@ -60,8 +71,15 @@ class _FluteStorage {
   /// ```dart
   /// final myName = FluteStorage.get<String>('myName');
   /// ```
-  T? get<T>(String key, {T? defaultValue}) =>
-      _box.get(key, defaultValue: defaultValue);
+  T? get<T>(String key, {T? defaultValue}) {
+    try {
+      return _box.get(key, defaultValue: defaultValue);
+    } catch (error, stackTrace) {
+      FluteObserver.observer
+          ?.onError('storage-get', error: error, stackTrace: stackTrace);
+      return defaultValue;
+    }
+  }
 
   // List readAll() => _box.valuesBetween().toList();
 
@@ -72,7 +90,14 @@ class _FluteStorage {
   /// ```dart
   /// FluteStorage.put<String>('myName','Flute');
   /// ```
-  Future<void> put<T>(String key, T value) async => await _box.put(key, value);
+  Future<void> put<T>(String key, T value) async {
+    try {
+      await _box.put(key, value);
+    } catch (error, stackTrace) {
+      FluteObserver.observer
+          ?.onError('storage-put', error: error, stackTrace: stackTrace);
+    }
+  }
 
   /// Writes a value to the storage with a key if it doesn't exists.
   ///
@@ -82,8 +107,13 @@ class _FluteStorage {
   /// FluteStorage.putIfAbsent<String>('myName','Flute');
   /// ```
   Future<void> putIfAbsent<T>(String key, T value) async {
-    if (_box.containsKey(key)) return;
-    await _box.put(key, value);
+    try {
+      if (_box.containsKey(key)) return;
+      await _box.put(key, value);
+    } catch (error, stackTrace) {
+      FluteObserver.observer?.onError('storage-putIfAbsent',
+          error: error, stackTrace: stackTrace);
+    }
   }
 
   /// Writes multiple data to the local storage.
@@ -93,15 +123,14 @@ class _FluteStorage {
   /// ```dart
   /// FluteStorage.putAll({'myName' : 'Flute', 'flute' : 'best'});
   /// ```
-  Future<void> putAll(Map<String, dynamic> data) async =>
+  Future<void> putAll(Map<String, dynamic> data) async {
+    try {
       await _box.putAll(data);
-
-  /// Gets values between two indexes.
-  Iterable<dynamic> paginatedValues({
-    int? startKey,
-    int? endKey,
-  }) =>
-      _box.valuesBetween(startKey: startKey, endKey: endKey);
+    } catch (error, stackTrace) {
+      FluteObserver.observer
+          ?.onError('storage-putAll', error: error, stackTrace: stackTrace);
+    }
+  }
 
   /// Writes a value to the storage with a key if the key's value is null.
   ///
@@ -110,7 +139,14 @@ class _FluteStorage {
   /// ```dart
   /// FluteStorage.delete('myName');
   /// ```
-  Future<void> delete(String key) async => await _box.delete(key);
+  Future<void> delete(String key) async {
+    try {
+      await _box.delete(key);
+    } catch (error, stackTrace) {
+      FluteObserver.observer
+          ?.onError('storage-delete', error: error, stackTrace: stackTrace);
+    }
+  }
 
   /// Writes a value to the storage with a key if the key's value is null.
   ///
@@ -119,16 +155,35 @@ class _FluteStorage {
   /// ```dart
   /// FluteStorage.deleteKeys(['myName', 'flute']);
   /// ```
-  Future<void> deleteAll(List<String> keys) async => await _box.deleteAll(keys);
+  Future<void> deleteAll(List<String> keys) async {
+    try {
+      await _box.deleteAll(keys);
+    } catch (error, stackTrace) {
+      FluteObserver.observer
+          ?.onError('storage-deleteAll', error: error, stackTrace: stackTrace);
+    }
+  }
 
   /// Deletes all keys and values from the storage, the file
   /// will still stay at its location.
-  Future<void> clear() async => await _box.clear();
+  Future<void> clear() async {
+    try {
+      await _box.clear();
+    } catch (error, stackTrace) {
+      FluteObserver.observer
+          ?.onError('storage-clear', error: error, stackTrace: stackTrace);
+    }
+  }
 
   /// Closes the storage.
   Future<void> dispose() async {
-    await _box.close();
-    await Hive.close();
+    try {
+      await _box.close();
+      await Hive.close();
+    } catch (error, stackTrace) {
+      FluteObserver.observer
+          ?.onError('storage-dispose', error: error, stackTrace: stackTrace);
+    }
   }
 }
 

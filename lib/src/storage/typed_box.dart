@@ -1,3 +1,5 @@
+import 'package:flute/flute.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 typedef _FromMap<T> = T Function(Map<String, dynamic> e);
@@ -19,35 +21,72 @@ class TypedBox<T> {
     String boxName, {
     required TypedConverter<T> converter,
   }) async {
-    await Hive.openBox(boxName);
-    return TypedBox<T>(boxName, converter);
+    try {
+      await Hive.openBox(boxName);
+      return TypedBox<T>(boxName, converter);
+    } catch (error, stackTrace) {
+      FluteObserver.observer?.onError('typedstorage-openBox',
+          error: error, stackTrace: stackTrace);
+      rethrow;
+    }
   }
 
   Future<void> deleteWhere(bool test(T element)) async {
-    final _keys = <int>[];
-    for (var entry in _box.toMap().entries) {
-      if (test(_typedConverter.fromMap(entry.value))) {
-        _keys.add(entry.key);
+    try {
+      final _keys = <int>[];
+      for (var entry in _box.toMap().entries) {
+        if (test(_typedConverter.fromMap(entry.value))) {
+          _keys.add(entry.key);
+        }
       }
+      await _box.deleteAll(_keys);
+    } catch (error, stackTrace) {
+      FluteObserver.observer?.onError('typedstorage-deleteWhere',
+          error: error, stackTrace: stackTrace);
     }
-    await _box.deleteAll(_keys);
   }
 
   List<T> where(bool test(T element)) {
-    final _entries = <T>[];
-    for (var entry in _box.values) {
-      final _generated = _typedConverter.fromMap(entry);
-      if (test(_generated)) {
-        _entries.add(_generated);
+    try {
+      final _entries = <T>[];
+      for (var entry in _box.values) {
+        final _generated = _typedConverter.fromMap(entry);
+        if (test(_generated)) {
+          _entries.add(_generated);
+        }
       }
+      return _entries;
+    } catch (error, stackTrace) {
+      FluteObserver.observer
+          ?.onError('typedstorage-where', error: error, stackTrace: stackTrace);
+      return List.empty();
     }
-    return _entries;
   }
 
-  Future<int> add(T data) async => await _box.add(_typedConverter.toMap(data));
+  Future<int> add(T data) async {
+    try {
+      return await _box.add(_typedConverter.toMap(data));
+    } catch (error, stackTrace) {
+      if (!kReleaseMode) {
+        rethrow;
+      }
+      FluteObserver.observer
+          ?.onError('typedstorage-add', error: error, stackTrace: stackTrace);
+      return -1;
+    }
+  }
 
-  Future<void> addAll(List<T> data) async =>
+  Future<void> addAll(List<T> data) async {
+    try {
       await _box.addAll(data.map(_typedConverter.toMap));
+    } catch (error, stackTrace) {
+      if (!kReleaseMode) {
+        rethrow;
+      }
+      FluteObserver.observer?.onError('typedstorage-addAll',
+          error: error, stackTrace: stackTrace);
+    }
+  }
 
   List<T> getValues() => _box.values
       .map<T>((v) => _typedConverter.fromMap(Map<String, dynamic>.from(v)))
@@ -64,13 +103,41 @@ class TypedBox<T> {
           .toList()
           .cast<T>();
 
-  Future<void> deleteAt(int index) async => await _box.deleteAt(index);
+  Future<void> deleteAt(int index) async {
+    try {
+      await _box.deleteAt(index);
+    } catch (error, stackTrace) {
+      FluteObserver.observer?.onError('typedstorage-deleteAt',
+          error: error, stackTrace: stackTrace);
+    }
+  }
 
   bool get isNotEmpty => _box.keys.isNotEmpty;
 
-  Future<void> clear() async => await _box.clear();
+  Future<void> clear() async {
+    try {
+      await _box.clear();
+    } catch (error, stackTrace) {
+      FluteObserver.observer
+          ?.onError('typedstorage-clear', error: error, stackTrace: stackTrace);
+    }
+  }
 
-  Future<void> open() async => _box = await Hive.openBox(_box.name);
+  Future<void> open() async {
+    try {
+      _box = await Hive.openBox(_box.name);
+    } catch (error, stackTrace) {
+      FluteObserver.observer
+          ?.onError('typedstorage-open', error: error, stackTrace: stackTrace);
+    }
+  }
 
-  Future<void> close() async => await _box.close();
+  Future<void> close() async {
+    try {
+      await _box.close();
+    } catch (error, stackTrace) {
+      FluteObserver.observer
+          ?.onError('typedstorage-close', error: error, stackTrace: stackTrace);
+    }
+  }
 }
