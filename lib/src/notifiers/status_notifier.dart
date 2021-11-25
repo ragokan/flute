@@ -23,10 +23,14 @@ mixin StatusNotifier<State> on FluteNotifier<State> {
   /// To [emit] the status, if [shouldNotify] parameter is true(default), notifies
   /// the listeners.
   void emitStatus(Status newStatus, {bool shouldNotify = true}) {
-    if (_status == newStatus) return;
-    _status = newStatus;
-    if (shouldNotify) {
-      _streamController?.add(_state);
+    try {
+      if (_status == newStatus) return;
+      _status = newStatus;
+      if (shouldNotify) {
+        _streamController?.add(_state);
+      }
+    } catch (error, stackTrace) {
+      addError(error, stackTrace);
     }
   }
 

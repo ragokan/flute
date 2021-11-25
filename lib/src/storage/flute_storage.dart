@@ -25,8 +25,8 @@ class _FluteStorage {
         callback(get<T>(key));
       }
     } catch (error, stackTrace) {
-      FluteObserver.observer
-          ?.onError('storage-listen', error: error, stackTrace: stackTrace);
+      FluteObserver.observer?.onStorageError('storage-listen',
+          error: error, stackTrace: stackTrace);
       _stream.cancel();
     }
 
@@ -55,8 +55,8 @@ class _FluteStorage {
       await Hive.initFlutter(subDir);
       _box = await Hive.openBox(boxName);
     } catch (error, stackTrace) {
-      FluteObserver.observer
-          ?.onError('storage-init', error: error, stackTrace: stackTrace);
+      FluteObserver.observer?.onStorageError('storage-init',
+          error: error, stackTrace: stackTrace);
     }
   }
 
@@ -76,7 +76,7 @@ class _FluteStorage {
       return _box.get(key, defaultValue: defaultValue);
     } catch (error, stackTrace) {
       FluteObserver.observer
-          ?.onError('storage-get', error: error, stackTrace: stackTrace);
+          ?.onStorageError('storage-get', error: error, stackTrace: stackTrace);
       return defaultValue;
     }
   }
@@ -95,7 +95,7 @@ class _FluteStorage {
       await _box.put(key, value);
     } catch (error, stackTrace) {
       FluteObserver.observer
-          ?.onError('storage-put', error: error, stackTrace: stackTrace);
+          ?.onStorageError('storage-put', error: error, stackTrace: stackTrace);
     }
   }
 
@@ -111,7 +111,7 @@ class _FluteStorage {
       if (_box.containsKey(key)) return;
       await _box.put(key, value);
     } catch (error, stackTrace) {
-      FluteObserver.observer?.onError('storage-putIfAbsent',
+      FluteObserver.observer?.onStorageError('storage-putIfAbsent',
           error: error, stackTrace: stackTrace);
     }
   }
@@ -127,8 +127,8 @@ class _FluteStorage {
     try {
       await _box.putAll(data);
     } catch (error, stackTrace) {
-      FluteObserver.observer
-          ?.onError('storage-putAll', error: error, stackTrace: stackTrace);
+      FluteObserver.observer?.onStorageError('storage-putAll',
+          error: error, stackTrace: stackTrace);
     }
   }
 
@@ -143,8 +143,8 @@ class _FluteStorage {
     try {
       await _box.delete(key);
     } catch (error, stackTrace) {
-      FluteObserver.observer
-          ?.onError('storage-delete', error: error, stackTrace: stackTrace);
+      FluteObserver.observer?.onStorageError('storage-delete',
+          error: error, stackTrace: stackTrace);
     }
   }
 
@@ -159,8 +159,8 @@ class _FluteStorage {
     try {
       await _box.deleteAll(keys);
     } catch (error, stackTrace) {
-      FluteObserver.observer
-          ?.onError('storage-deleteAll', error: error, stackTrace: stackTrace);
+      FluteObserver.observer?.onStorageError('storage-deleteAll',
+          error: error, stackTrace: stackTrace);
     }
   }
 
@@ -170,8 +170,8 @@ class _FluteStorage {
     try {
       await _box.clear();
     } catch (error, stackTrace) {
-      FluteObserver.observer
-          ?.onError('storage-clear', error: error, stackTrace: stackTrace);
+      FluteObserver.observer?.onStorageError('storage-clear',
+          error: error, stackTrace: stackTrace);
     }
   }
 
@@ -181,8 +181,8 @@ class _FluteStorage {
       await _box.close();
       await Hive.close();
     } catch (error, stackTrace) {
-      FluteObserver.observer
-          ?.onError('storage-dispose', error: error, stackTrace: stackTrace);
+      FluteObserver.observer?.onStorageError('storage-dispose',
+          error: error, stackTrace: stackTrace);
     }
   }
 }

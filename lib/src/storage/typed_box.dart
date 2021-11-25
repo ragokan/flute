@@ -25,7 +25,7 @@ class TypedBox<T> {
       await Hive.openBox(boxName);
       return TypedBox<T>(boxName, converter);
     } catch (error, stackTrace) {
-      FluteObserver.observer?.onError('typedstorage-openBox',
+      FluteObserver.observer?.onStorageError('typedstorage-openBox',
           error: error, stackTrace: stackTrace);
       rethrow;
     }
@@ -41,7 +41,7 @@ class TypedBox<T> {
       }
       await _box.deleteAll(_keys);
     } catch (error, stackTrace) {
-      FluteObserver.observer?.onError('typedstorage-deleteWhere',
+      FluteObserver.observer?.onStorageError('typedstorage-deleteWhere',
           error: error, stackTrace: stackTrace);
     }
   }
@@ -57,8 +57,8 @@ class TypedBox<T> {
       }
       return _entries;
     } catch (error, stackTrace) {
-      FluteObserver.observer
-          ?.onError('typedstorage-where', error: error, stackTrace: stackTrace);
+      FluteObserver.observer?.onStorageError('typedstorage-where',
+          error: error, stackTrace: stackTrace);
       return List.empty();
     }
   }
@@ -70,8 +70,8 @@ class TypedBox<T> {
       if (!kReleaseMode) {
         rethrow;
       }
-      FluteObserver.observer
-          ?.onError('typedstorage-add', error: error, stackTrace: stackTrace);
+      FluteObserver.observer?.onStorageError('typedstorage-add',
+          error: error, stackTrace: stackTrace);
       return -1;
     }
   }
@@ -83,7 +83,7 @@ class TypedBox<T> {
       if (!kReleaseMode) {
         rethrow;
       }
-      FluteObserver.observer?.onError('typedstorage-addAll',
+      FluteObserver.observer?.onStorageError('typedstorage-addAll',
           error: error, stackTrace: stackTrace);
     }
   }
@@ -107,7 +107,7 @@ class TypedBox<T> {
     try {
       await _box.deleteAt(index);
     } catch (error, stackTrace) {
-      FluteObserver.observer?.onError('typedstorage-deleteAt',
+      FluteObserver.observer?.onStorageError('typedstorage-deleteAt',
           error: error, stackTrace: stackTrace);
     }
   }
@@ -118,8 +118,8 @@ class TypedBox<T> {
     try {
       await _box.clear();
     } catch (error, stackTrace) {
-      FluteObserver.observer
-          ?.onError('typedstorage-clear', error: error, stackTrace: stackTrace);
+      FluteObserver.observer?.onStorageError('typedstorage-clear',
+          error: error, stackTrace: stackTrace);
     }
   }
 
@@ -127,8 +127,8 @@ class TypedBox<T> {
     try {
       _box = await Hive.openBox(_box.name);
     } catch (error, stackTrace) {
-      FluteObserver.observer
-          ?.onError('typedstorage-open', error: error, stackTrace: stackTrace);
+      FluteObserver.observer?.onStorageError('typedstorage-open',
+          error: error, stackTrace: stackTrace);
     }
   }
 
@@ -136,8 +136,8 @@ class TypedBox<T> {
     try {
       await _box.close();
     } catch (error, stackTrace) {
-      FluteObserver.observer
-          ?.onError('typedstorage-close', error: error, stackTrace: stackTrace);
+      FluteObserver.observer?.onStorageError('typedstorage-close',
+          error: error, stackTrace: stackTrace);
     }
   }
 }

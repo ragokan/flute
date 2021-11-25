@@ -9,7 +9,7 @@ abstract class FluteObserver {
     StackTrace? stackTrace,
   }) {}
 
-  void onError(
+  void onStorageError(
     String type, {
     required Object error,
     StackTrace? stackTrace,
