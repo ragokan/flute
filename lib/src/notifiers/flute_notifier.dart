@@ -3,7 +3,7 @@ import 'package:flute/flute.dart';
 import 'package:flute/src/notifiers/models/change_model.dart';
 import 'package:flutter/material.dart';
 
-part 'stream_notifier.dart';
+part 'status_notifier.dart';
 
 typedef _ListenerCallback<State> = void Function(State state);
 
@@ -21,11 +21,25 @@ abstract class FluteNotifier<State> {
 
   State get state => _state;
 
+  /// Private [StreamController] to notify the listeners.
+  StreamController<State>? _streamController;
+
+  /// A way to listen the state changes, also can be used with [StreamBuilder].
+  Stream<State> get stream =>
+      (_streamController ??= StreamController<State>.broadcast()).stream;
+
   /// Emits the state. No equality check because of large data comparisions.
   /// Instead, just check if they are identicial or not.
   @protected
   @mustCallSuper
   void emit(State newState) {
+    assert(() {
+      if (_streamController?.isClosed ?? false) {
+        throw Exception('Tried to emit state of $runtimeType after dispose.');
+      }
+      return true;
+    }());
+
     if (identical(newState, _state)) return;
 
     onChange(Change(currentState: _state, nextState: newState));
@@ -39,6 +53,8 @@ abstract class FluteNotifier<State> {
         addError(error, stackTrace);
       }
     }
+
+    _streamController?.sink.add(_state);
   }
 
   /// Listen the state changes
@@ -73,7 +89,16 @@ abstract class FluteNotifier<State> {
 
   /// Disposes the notifier, removes the listeners.
   @mustCallSuper
-  void dispose() {
+  Future<void> dispose() async {
+    assert(() {
+      if (_streamController?.isClosed ?? false) {
+        throw Exception('Tried to dispose $runtimeType after dispose.');
+      }
+      return true;
+    }());
+
     _listeners.clear();
+
+    await _streamController?.close();
   }
 }
