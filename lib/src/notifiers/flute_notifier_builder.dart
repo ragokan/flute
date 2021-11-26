@@ -60,7 +60,7 @@ class _FluteNotifierBuilderState<
 
     final _result = widget.filter!(widget.notifier.state);
 
-    if (!identical(cachedState, _result) && cachedState != _result) {
+    if (cachedState != _result) {
       cachedState = _result;
       _update();
     }
@@ -82,8 +82,7 @@ class _FluteNotifierBuilderState<
   void didUpdateWidget(
       covariant FluteNotifierBuilder<BuilderNotifier, BuilderState> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (!identical(widget.notifier, oldWidget.notifier) &&
-        widget.notifier != oldWidget.notifier) {
+    if (widget.notifier != oldWidget.notifier) {
       _listen();
     }
   }

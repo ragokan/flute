@@ -29,7 +29,7 @@ abstract class FluteNotifier<State> {
       (_streamController ??= StreamController<State>.broadcast()).stream;
 
   /// Emits the state. No equality check because of large data comparisions.
-  /// Instead, just check if they are identicial or not.
+  /// Instead, just check if they are equal or not.
   @protected
   @mustCallSuper
   void emit(State newState) {
@@ -40,7 +40,7 @@ abstract class FluteNotifier<State> {
       return true;
     }());
 
-    if (identical(newState, _state)) return;
+    if (_state == newState) return;
 
     onChange(Change(currentState: _state, nextState: newState));
 

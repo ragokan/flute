@@ -11,7 +11,7 @@ class DataProvider<Data> extends InheritedWidget {
 
   @override
   bool updateShouldNotify(covariant DataProvider<State> oldWidget) =>
-      !identical(data, oldWidget.data);
+      data != oldWidget.data;
 
   static Data of<Data>(BuildContext context) {
     final DataProvider? dataProvider =
