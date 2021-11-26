@@ -1,5 +1,6 @@
 import 'package:flute/flute.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 
 /// The implementation of [FluteStorage]
 class _FluteStorage {
@@ -53,10 +54,21 @@ class _FluteStorage {
   Future<void> init([String boxName = 'flute', String? subDir]) async {
     try {
       await Hive.initFlutter(subDir);
-      _box = await Hive.openBox(boxName);
     } catch (error, stackTrace) {
       FluteObserver.observer?.onStorageError('storage-init',
           error: error, stackTrace: stackTrace);
+      final appDir = await getApplicationDocumentsDirectory();
+      Hive.init(appDir.path);
+    }
+
+    try {
+      _box = await Hive.openBox(boxName);
+    } catch (error, stackTrace) {
+      FluteObserver.observer?.onStorageError('storage-open',
+          error: error, stackTrace: stackTrace);
+
+      await Hive.deleteBoxFromDisk(boxName);
+      _box = await Hive.openBox(boxName);
     }
   }
 
@@ -77,6 +89,7 @@ class _FluteStorage {
     } catch (error, stackTrace) {
       FluteObserver.observer
           ?.onStorageError('storage-get', error: error, stackTrace: stackTrace);
+      delete(key);
       return defaultValue;
     }
   }
