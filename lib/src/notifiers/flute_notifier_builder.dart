@@ -1,39 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flute/flute.dart';
 
-typedef _FluteBuilderCallback<State> = Widget Function(State state);
-typedef _FilterCallback<State> = Partial Function<Partial extends Object>(
-    State state);
+typedef _FluteBuilderCallback<State> = Widget Function(
+    BuildContext context, State state);
+typedef _FilterCallback<State> = Object? Function(State state);
+typedef _ListenerCallback<State> = void Function(
+    BuildContext context, State state);
 
-class FluteNotifierBuilder<State extends FluteNotifier<State>>
+class FluteNotifierBuilder<Notifier extends FluteNotifier<State>, State>
     extends StatefulWidget {
   const FluteNotifierBuilder({
     Key? key,
     required this.notifier,
     required this.builder,
     this.filter,
+    this.listener,
   }) : super(key: key);
 
-  final FluteNotifier<State> notifier;
+  final Notifier notifier;
 
   final _FluteBuilderCallback<State> builder;
 
   final _FilterCallback<State>? filter;
 
-  Partial? _callFilter<Partial>() {
+  final _ListenerCallback<State>? listener;
+
+  Object? _callFilter() {
     if (filter == null) return null;
     return filter!(notifier.state);
   }
 
+  Widget _callBuilder(BuildContext context) => builder(context, notifier.state);
+
   @override
-  _FluteNotifierBuilderState<State> createState() =>
-      _FluteNotifierBuilderState<State>();
+  _FluteNotifierBuilderState<Notifier, State> createState() =>
+      _FluteNotifierBuilderState<Notifier, State>();
 }
 
 class _FluteNotifierBuilderState<
-        BuilderState extends FluteNotifier<BuilderState>>
-    extends State<FluteNotifierBuilder<BuilderState>> {
-  VoidFunction? _removeListener;
+        BuilderNotifier extends FluteNotifier<BuilderState>, BuilderState>
+    extends State<FluteNotifierBuilder<BuilderNotifier, BuilderState>> {
+  void Function()? _removeListener;
   Object? cachedState;
 
   void _listen() {
@@ -59,7 +66,10 @@ class _FluteNotifierBuilderState<
     }
   }
 
-  void _update() => setState(() {});
+  void _update() {
+    widget.listener?.call(context, widget.notifier.state);
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -69,7 +79,8 @@ class _FluteNotifierBuilderState<
   }
 
   @override
-  void didUpdateWidget(covariant FluteNotifierBuilder<BuilderState> oldWidget) {
+  void didUpdateWidget(
+      covariant FluteNotifierBuilder<BuilderNotifier, BuilderState> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!identical(widget.notifier, oldWidget.notifier) &&
         widget.notifier != oldWidget.notifier) {
@@ -84,5 +95,5 @@ class _FluteNotifierBuilderState<
   }
 
   @override
-  Widget build(BuildContext context) => widget.builder(widget.notifier.state);
+  Widget build(BuildContext context) => widget._callBuilder(context);
 }
