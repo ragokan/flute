@@ -42,9 +42,9 @@ abstract class FluteNotifier<State> {
 
     if (_state == newState) return;
 
-    onChange(Change(currentState: _state, nextState: newState));
-
     _state = newState;
+
+    onChange(Change(currentState: _state, nextState: newState));
 
     for (final listener in _listeners) {
       try {
