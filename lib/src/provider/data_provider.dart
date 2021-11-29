@@ -22,3 +22,7 @@ class DataProvider<Data> extends InheritedWidget {
     return dataProvider!.data;
   }
 }
+
+extension DataExtension on BuildContext {
+  Data data<Data>() => DataProvider.of<Data>(this);
+}
