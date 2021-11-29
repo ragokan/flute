@@ -9,7 +9,12 @@ typedef OnError = void Function(
 class FluteApiService {
   final String? _endPoint;
 
-  const FluteApiService([this._endPoint]);
+  final Map<String, Object>? defaultHeaders;
+
+  const FluteApiService({
+    this.defaultHeaders,
+    String? endPoint,
+  }) : _endPoint = endPoint;
 
   Future<Response<T>> get<T>(
     String path, {
@@ -100,7 +105,10 @@ class FluteApiService {
         path: path,
         data: body,
         queryParameters: queryParameters,
-        headers: {'Authorization': FluteStorage.get(kTokenKey)},
+        headers: {
+          'Authorization': FluteStorage.get(kTokenKey),
+          ...(defaultHeaders ?? {})
+        },
         baseUrl: _endPoint,
       ),
     );
