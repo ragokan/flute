@@ -20,7 +20,8 @@ class TypedBox<T> {
   }
 
   final TypedConverter<T> _typedConverter;
-  TypedBox(String boxName, this._typedConverter) : __box = Hive.box(boxName);
+  TypedBox(String boxName, this._typedConverter, {bool open = false})
+      : __box = open ? Hive.box(boxName) : null;
 
   static Future<TypedBox<T>> openBox<T>(
     String boxName, {
@@ -28,7 +29,7 @@ class TypedBox<T> {
   }) async {
     try {
       await Hive.openBox(boxName);
-      return TypedBox<T>(boxName, converter);
+      return TypedBox<T>(boxName, converter, open: true);
     } catch (error, stackTrace) {
       FluteObserver.observer?.onStorageError('typedstorage-openBox',
           error: error, stackTrace: stackTrace);
@@ -47,6 +48,19 @@ class TypedBox<T> {
       await _box.deleteAll(_keys);
     } catch (error, stackTrace) {
       FluteObserver.observer?.onStorageError('typedstorage-deleteWhere',
+          error: error, stackTrace: stackTrace);
+    }
+  }
+
+  Future<void> updateWhere(bool test(T element), T newElement) async {
+    try {
+      for (var entry in _box.toMap().entries) {
+        if (test(_typedConverter.fromMap(entry.value))) {
+          await _box.putAt(entry.key, _typedConverter.toMap(newElement));
+        }
+      }
+    } catch (error, stackTrace) {
+      FluteObserver.observer?.onStorageError('typedstorage-updateWhere',
           error: error, stackTrace: stackTrace);
     }
   }
@@ -93,7 +107,7 @@ class TypedBox<T> {
     }
   }
 
-  List<T> getValues() => _box.values
+  List<T> get values => _box.values
       .map<T>((v) => _typedConverter.fromMap(Map<String, dynamic>.from(v)))
       .toList()
       .cast<T>();
