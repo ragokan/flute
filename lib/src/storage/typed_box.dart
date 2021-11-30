@@ -44,7 +44,8 @@ class TypedBox<T> {
     try {
       final _keys = <int>[];
       for (var entry in _box.toMap().entries) {
-        if (test(_typedConverter.fromMap(entry.value))) {
+        if (test(
+            _typedConverter.fromMap(Map<String, dynamic>.from(entry.value)))) {
           _keys.add(entry.key);
         }
       }
@@ -58,7 +59,8 @@ class TypedBox<T> {
   Future<void> updateWhere(bool test(T element), T newElement) async {
     try {
       for (var entry in _box.toMap().entries) {
-        if (test(_typedConverter.fromMap(entry.value))) {
+        if (test(
+            _typedConverter.fromMap(Map<String, dynamic>.from(entry.value)))) {
           await _box.putAt(entry.key, _typedConverter.toMap(newElement));
         }
       }
