@@ -74,7 +74,8 @@ class TypedBox<T> {
     try {
       final _entries = <T>[];
       for (var entry in _box.values) {
-        final _generated = _typedConverter.fromMap(entry);
+        final _generated =
+            _typedConverter.fromMap(Map<String, dynamic>.from(entry));
         if (test(_generated)) {
           _entries.add(_generated);
         }
