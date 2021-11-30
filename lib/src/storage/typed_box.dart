@@ -13,9 +13,14 @@ class TypedConverter<T> {
 }
 
 class TypedBox<T> {
-  Box _box;
+  Box? __box;
+  Box get _box {
+    assert(__box != null, 'You have to open the box to use it!');
+    return __box!;
+  }
+
   final TypedConverter<T> _typedConverter;
-  TypedBox(String boxName, this._typedConverter) : _box = Hive.box(boxName);
+  TypedBox(String boxName, this._typedConverter) : __box = Hive.box(boxName);
 
   static Future<TypedBox<T>> openBox<T>(
     String boxName, {
@@ -125,7 +130,7 @@ class TypedBox<T> {
 
   Future<void> open() async {
     try {
-      _box = await Hive.openBox(_box.name);
+      __box = await Hive.openBox(_box.name);
     } catch (error, stackTrace) {
       FluteObserver.observer?.onStorageError('typedstorage-open',
           error: error, stackTrace: stackTrace);
