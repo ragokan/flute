@@ -61,10 +61,13 @@ class TypedBox<T> {
 
   Future<void> updateWhere(bool test(T element), T newElement) async {
     try {
-      for (var entry in _box.toMap().entries) {
+      for (var i = 0; i < _box.values.length; i++) {
         if (test(
-            _typedConverter.fromMap(Map<String, dynamic>.from(entry.value)))) {
-          await _box.putAt(entry.key, _typedConverter.toMap(newElement));
+          _typedConverter.fromMap(
+            Map<String, dynamic>.from(_box.values.elementAt(i)),
+          ),
+        )) {
+          await _box.putAt(i, _typedConverter.toMap(newElement));
         }
       }
     } catch (error, stackTrace) {
