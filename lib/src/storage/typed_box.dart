@@ -19,6 +19,9 @@ class TypedBox<T> {
     return __box!;
   }
 
+  // For test purposes
+  Box get box => __box!;
+
   final String _boxName;
 
   final TypedConverter<T> _typedConverter;
