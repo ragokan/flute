@@ -1,7 +1,6 @@
 // ignore_for_file: implementation_imports, subtype_of_sealed_class
 
 import 'package:meta/meta.dart';
-import 'package:riverpod/riverpod.dart';
 
 import 'package:riverpod/src/framework.dart';
 import 'package:riverpod/src/common.dart';

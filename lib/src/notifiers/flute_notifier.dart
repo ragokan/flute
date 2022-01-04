@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flute/flute.dart';
-import 'package:flute/src/notifiers/models/change_model.dart';
 import 'package:flutter/material.dart';
 
 part 'status_notifier.dart';

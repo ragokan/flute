@@ -1,13 +1,10 @@
 // ignore_for_file: implementation_imports
 
-import 'index.dart';
-import '../../flute.dart';
-import './flute_provider.dart';
-
-import 'package:riverpod/riverpod.dart';
-
 import 'package:riverpod/src/framework.dart';
 import 'package:riverpod/src/internals.dart';
+
+import './flute_provider.dart';
+import '../../flute.dart';
 
 class FluteNotifierProviderBuilder {
   const FluteNotifierProviderBuilder();
