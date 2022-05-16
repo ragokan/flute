@@ -45,6 +45,6 @@ mixin FluteFunctions {
   ///  });
   /// ```
   void addPostFrameCallback(VoidFunction callback) {
-    WidgetsBinding.instance!.addPostFrameCallback((_) => callback());
+    WidgetsBinding.instance.addPostFrameCallback((_) => callback());
   }
 }
