@@ -6,13 +6,15 @@ import '../../../flute.dart';
 typedef OnError = void Function(
     DioError error, ErrorInterceptorHandler handler);
 
+typedef GetHeaders = Map<String, Object> Function();
+
 class FluteApiService {
   final String? _endPoint;
 
-  final Map<String, Object>? defaultHeaders;
+  final GetHeaders? getHeaders;
 
   const FluteApiService({
-    this.defaultHeaders,
+    this.getHeaders,
     String? endPoint,
   }) : _endPoint = endPoint;
 
@@ -107,7 +109,7 @@ class FluteApiService {
         queryParameters: queryParameters,
         headers: {
           'Authorization': FluteStorage.get(kTokenKey),
-          ...(defaultHeaders ?? {})
+          ...(getHeaders?.call() ?? {})
         },
         baseUrl: _endPoint,
       ),
