@@ -6,7 +6,7 @@ import '../../../flute.dart';
 typedef OnError = void Function(
     DioError error, ErrorInterceptorHandler handler);
 
-typedef GetHeaders = Map<String, Object> Function();
+typedef GetHeaders = Map<String, String> Function();
 
 class FluteApiService {
   final String? _endPoint;
@@ -101,16 +101,16 @@ class FluteApiService {
       _dio.interceptors.add(InterceptorsWrapper(onError: onError));
     }
 
+    final headers = getHeaders?.call() ?? {};
+    headers['Authorization'] = FluteStorage.get(kTokenKey);
+
     final _response = await _dio.fetch<T>(
       RequestOptions(
         method: method,
         path: path,
         data: body,
         queryParameters: queryParameters,
-        headers: {
-          'Authorization': FluteStorage.get(kTokenKey),
-          ...(getHeaders?.call() ?? {})
-        },
+        headers: headers,
         baseUrl: _endPoint,
       ),
     );
