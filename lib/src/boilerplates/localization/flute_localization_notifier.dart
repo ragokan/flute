@@ -30,8 +30,12 @@ abstract class FluteLocalizationNotifier<T extends FluteLanguageBase>
     extends FluteNotifier<T> {
   static const String kLocaleKey = 'kLocaleKey';
 
-  FluteLocalizationNotifier(T language)
-      : super(FluteStorage.get(kLocaleKey, defaultValue: language)!);
+  FluteLocalizationNotifier({required String localeKey, required T language})
+      : super(language) {
+    final key = FluteStorage.get<String>(kLocaleKey);
+    if (key == null) return;
+    setLocale(key);
+  }
 
   // Add new locales here
   final Map<String, T> locales = const {};
