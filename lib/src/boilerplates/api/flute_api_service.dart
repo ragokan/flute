@@ -8,6 +8,7 @@ typedef OnError = void Function(
 
 typedef GetHeaders = Map<String, String> Function();
 
+@immutable
 class FluteApiService {
   final String? _endPoint;
 
