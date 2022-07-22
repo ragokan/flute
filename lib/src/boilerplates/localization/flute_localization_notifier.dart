@@ -28,12 +28,10 @@ import '../../../flute.dart';
 /// ```
 abstract class FluteLocalizationNotifier<T extends FluteLanguageBase>
     extends FluteNotifier<T> {
-  final String kLocaleKey = 'kLocaleKey';
+  static const String kLocaleKey = 'kLocaleKey';
 
-  FluteLocalizationNotifier(T language) : super(language) {
-    // Get data from save
-    setLocale(FluteStorage.get<String>(kLocaleKey));
-  }
+  FluteLocalizationNotifier(T language)
+      : super(FluteStorage.get(kLocaleKey, defaultValue: language)!);
 
   // Add new locales here
   final Map<String, T> locales = const {};
