@@ -32,7 +32,7 @@ abstract class FluteLocalizationNotifier<T extends FluteLanguageBase>
 
   FluteLocalizationNotifier(T language) : super(language) {
     // Get data from save
-    setLocale(FluteStorage.get<String>('locale'));
+    setLocale(FluteStorage.get<String>(kLocaleKey));
   }
 
   // Add new locales here
