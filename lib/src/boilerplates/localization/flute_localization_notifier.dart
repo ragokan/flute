@@ -32,7 +32,6 @@ abstract class FluteLocalizationNotifier<T extends FluteLanguageBase>
 
   FluteLocalizationNotifier(T _language) : super(_language) {
     final key = FluteStorage.get<String>(kLocaleKey);
-    if (key == null) return;
     setLocale(key);
   }
 
