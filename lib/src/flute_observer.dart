@@ -1,5 +1,7 @@
 import 'package:flute/flute.dart';
+import 'package:flutter/material.dart';
 
+@immutable
 abstract class FluteObserver {
   const FluteObserver();
 
