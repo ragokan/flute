@@ -103,7 +103,10 @@ class FluteApiService {
     }
 
     final headers = getHeaders?.call() ?? {};
-    headers['Authorization'] = FluteStorage.get(kTokenKey);
+    final authToken = FluteStorage.get<String>(kTokenKey);
+    if (authToken != null) {
+      headers['Authorization'] = authToken;
+    }
 
     final _response = await _dio.fetch<T>(
       RequestOptions(
