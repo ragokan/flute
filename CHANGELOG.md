@@ -1,3 +1,7 @@
+## 2.0.0
+
+- New state improvements.
+
 ## 1.0.6
 
 - New state improvements.
