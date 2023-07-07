@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../flute.dart';
 
 typedef OnError = void Function(
-    DioError error, ErrorInterceptorHandler handler);
+    DioException exception, ErrorInterceptorHandler handler);
 
 typedef GetHeaders = Map<String, String> Function();
 

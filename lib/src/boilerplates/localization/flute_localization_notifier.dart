@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:riverbloc/riverbloc.dart';
 
 import '../../../flute.dart';
 
@@ -27,7 +28,7 @@ import '../../../flute.dart';
 /// }
 /// ```
 abstract class FluteLocalizationNotifier<T extends FluteLanguageBase>
-    extends FluteNotifier<T> {
+    extends Cubit<T> {
   static const String kLocaleKey = 'kLocaleKey';
 
   FluteLocalizationNotifier(T _language) : super(_language) {

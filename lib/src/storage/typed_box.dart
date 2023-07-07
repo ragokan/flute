@@ -1,4 +1,3 @@
-import 'package:flute/flute.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -36,9 +35,7 @@ class TypedBox<T> {
     try {
       await Hive.openBox(boxName);
       return TypedBox<T>(boxName, converter, open: true);
-    } catch (error, stackTrace) {
-      FluteObserver.observer?.onStorageError('typedstorage-openBox',
-          error: error, stackTrace: stackTrace);
+    } catch (_) {
       rethrow;
     }
   }
@@ -53,10 +50,7 @@ class TypedBox<T> {
         }
       }
       await _box.deleteAll(_keys);
-    } catch (error, stackTrace) {
-      FluteObserver.observer?.onStorageError('typedstorage-deleteWhere',
-          error: error, stackTrace: stackTrace);
-    }
+    } catch (_) {}
   }
 
   Future<void> updateWhere(bool test(T element), T newElement) async {
@@ -70,10 +64,7 @@ class TypedBox<T> {
           await _box.putAt(i, _typedConverter.toMap(newElement));
         }
       }
-    } catch (error, stackTrace) {
-      FluteObserver.observer?.onStorageError('typedstorage-updateWhere',
-          error: error, stackTrace: stackTrace);
-    }
+    } catch (_) {}
   }
 
   List<T> where(bool test(T element)) {
@@ -87,9 +78,7 @@ class TypedBox<T> {
         }
       }
       return _entries;
-    } catch (error, stackTrace) {
-      FluteObserver.observer?.onStorageError('typedstorage-where',
-          error: error, stackTrace: stackTrace);
+    } catch (_) {
       return List.empty();
     }
   }
@@ -97,12 +86,10 @@ class TypedBox<T> {
   Future<int> add(T data) async {
     try {
       return await _box.add(_typedConverter.toMap(data));
-    } catch (error, stackTrace) {
+    } catch (_) {
       if (!kReleaseMode) {
         rethrow;
       }
-      FluteObserver.observer?.onStorageError('typedstorage-add',
-          error: error, stackTrace: stackTrace);
       return -1;
     }
   }
@@ -110,12 +97,10 @@ class TypedBox<T> {
   Future<void> addAll(List<T> data) async {
     try {
       await _box.addAll(data.map(_typedConverter.toMap));
-    } catch (error, stackTrace) {
+    } catch (_) {
       if (!kReleaseMode) {
         rethrow;
       }
-      FluteObserver.observer?.onStorageError('typedstorage-addAll',
-          error: error, stackTrace: stackTrace);
     }
   }
 
@@ -137,10 +122,7 @@ class TypedBox<T> {
   Future<void> deleteAt(int index) async {
     try {
       await _box.deleteAt(index);
-    } catch (error, stackTrace) {
-      FluteObserver.observer?.onStorageError('typedstorage-deleteAt',
-          error: error, stackTrace: stackTrace);
-    }
+    } catch (_) {}
   }
 
   bool get isNotEmpty => _box.keys.isNotEmpty;
@@ -148,27 +130,18 @@ class TypedBox<T> {
   Future<void> clear() async {
     try {
       await _box.clear();
-    } catch (error, stackTrace) {
-      FluteObserver.observer?.onStorageError('typedstorage-clear',
-          error: error, stackTrace: stackTrace);
-    }
+    } catch (_) {}
   }
 
   Future<void> open() async {
     try {
       __box = await Hive.openBox(_boxName);
-    } catch (error, stackTrace) {
-      FluteObserver.observer?.onStorageError('typedstorage-open',
-          error: error, stackTrace: stackTrace);
-    }
+    } catch (_) {}
   }
 
   Future<void> close() async {
     try {
       await _box.close();
-    } catch (error, stackTrace) {
-      FluteObserver.observer?.onStorageError('typedstorage-close',
-          error: error, stackTrace: stackTrace);
-    }
+    } catch (_) {}
   }
 }

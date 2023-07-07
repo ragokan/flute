@@ -25,9 +25,7 @@ class _FluteStorage {
       if (callImmediately) {
         callback(get<T>(key));
       }
-    } catch (error, stackTrace) {
-      FluteObserver.observer?.onStorageError('storage-listen',
-          error: error, stackTrace: stackTrace);
+    } catch (_) {
       _stream.cancel();
     }
 
@@ -54,19 +52,14 @@ class _FluteStorage {
   Future<void> init([String boxName = 'flute', String? subDir]) async {
     try {
       await Hive.initFlutter(subDir);
-    } catch (error, stackTrace) {
-      FluteObserver.observer?.onStorageError('storage-init',
-          error: error, stackTrace: stackTrace);
+    } catch (_) {
       final appDir = await getApplicationDocumentsDirectory();
       Hive.init(appDir.path);
     }
 
     try {
       _box = await Hive.openBox(boxName);
-    } catch (error, stackTrace) {
-      FluteObserver.observer?.onStorageError('storage-open',
-          error: error, stackTrace: stackTrace);
-
+    } catch (_) {
       await Hive.deleteBoxFromDisk(boxName);
       _box = await Hive.openBox(boxName);
     }
@@ -86,9 +79,7 @@ class _FluteStorage {
   T? get<T>(String key, {T? defaultValue}) {
     try {
       return _box.get(key, defaultValue: defaultValue);
-    } catch (error, stackTrace) {
-      FluteObserver.observer
-          ?.onStorageError('storage-get', error: error, stackTrace: stackTrace);
+    } catch (_) {
       delete(key);
       return defaultValue;
     }
@@ -106,10 +97,7 @@ class _FluteStorage {
   Future<void> put<T>(String key, T value) async {
     try {
       await _box.put(key, value);
-    } catch (error, stackTrace) {
-      FluteObserver.observer
-          ?.onStorageError('storage-put', error: error, stackTrace: stackTrace);
-    }
+    } catch (_) {}
   }
 
   /// Writes a value to the storage with a key if it doesn't exists.
@@ -123,10 +111,7 @@ class _FluteStorage {
     try {
       if (_box.containsKey(key)) return;
       await _box.put(key, value);
-    } catch (error, stackTrace) {
-      FluteObserver.observer?.onStorageError('storage-putIfAbsent',
-          error: error, stackTrace: stackTrace);
-    }
+    } catch (_) {}
   }
 
   /// Writes multiple data to the local storage.
@@ -139,10 +124,7 @@ class _FluteStorage {
   Future<void> putAll(Map<String, dynamic> data) async {
     try {
       await _box.putAll(data);
-    } catch (error, stackTrace) {
-      FluteObserver.observer?.onStorageError('storage-putAll',
-          error: error, stackTrace: stackTrace);
-    }
+    } catch (_) {}
   }
 
   /// Writes a value to the storage with a key if the key's value is null.
@@ -155,10 +137,7 @@ class _FluteStorage {
   Future<void> delete(String key) async {
     try {
       await _box.delete(key);
-    } catch (error, stackTrace) {
-      FluteObserver.observer?.onStorageError('storage-delete',
-          error: error, stackTrace: stackTrace);
-    }
+    } catch (_) {}
   }
 
   /// Writes a value to the storage with a key if the key's value is null.
@@ -171,10 +150,7 @@ class _FluteStorage {
   Future<void> deleteAll(List<String> keys) async {
     try {
       await _box.deleteAll(keys);
-    } catch (error, stackTrace) {
-      FluteObserver.observer?.onStorageError('storage-deleteAll',
-          error: error, stackTrace: stackTrace);
-    }
+    } catch (_) {}
   }
 
   /// Deletes all keys and values from the storage, the file
@@ -182,10 +158,7 @@ class _FluteStorage {
   Future<void> clear() async {
     try {
       await _box.clear();
-    } catch (error, stackTrace) {
-      FluteObserver.observer?.onStorageError('storage-clear',
-          error: error, stackTrace: stackTrace);
-    }
+    } catch (_) {}
   }
 
   /// Closes the storage.
@@ -193,10 +166,7 @@ class _FluteStorage {
     try {
       await _box.close();
       await Hive.close();
-    } catch (error, stackTrace) {
-      FluteObserver.observer?.onStorageError('storage-dispose',
-          error: error, stackTrace: stackTrace);
-    }
+    } catch (_) {}
   }
 }
 

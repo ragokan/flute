@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:riverbloc/riverbloc.dart';
 
-import '../../../flute.dart';
-
-abstract class FluteThemeNotifier extends FluteNotifier<ThemeData> {
+abstract class FluteThemeNotifier extends Cubit<ThemeData> {
   FluteThemeNotifier(ThemeData state) : super(state);
 
   void setMode(ThemeMode mode) {
