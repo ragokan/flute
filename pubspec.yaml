@@ -1,11 +1,11 @@
 name: flute
 description: An amazing flutter package that I created for myself.
-version: 2.0.0
+version: 2.0.1
 homepage: https://github.com/ragokan/flute
 repository: https://github.com/ragokan/flute
 
 environment:
-  sdk: ">=2.18.2 <4.0.0"
+  sdk: ">=3.0.5 <4.0.0"
 
 dependencies:
   flutter:
