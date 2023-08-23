@@ -24,6 +24,7 @@ class FluteApiService {
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? body,
     OnError? onError,
+    ResponseType? responseType,
   }) async =>
       await _baseRequest(
         'GET',
@@ -31,6 +32,7 @@ class FluteApiService {
         queryParameters: queryParameters,
         body: body,
         onError: onError,
+        responseType: responseType,
       );
 
   Future<Response<T>> post<T>(
@@ -38,6 +40,7 @@ class FluteApiService {
     Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
     OnError? onError,
+    ResponseType? responseType,
   }) async =>
       await _baseRequest(
         'POST',
@@ -45,6 +48,7 @@ class FluteApiService {
         queryParameters: queryParameters,
         body: body,
         onError: onError,
+        responseType: responseType,
       );
 
   Future<Response<T>> patch<T>(
@@ -52,6 +56,7 @@ class FluteApiService {
     Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
     OnError? onError,
+    ResponseType? responseType,
   }) async =>
       await _baseRequest(
         'PATCH',
@@ -59,6 +64,7 @@ class FluteApiService {
         queryParameters: queryParameters,
         body: body,
         onError: onError,
+        responseType: responseType,
       );
 
   Future<Response<T>> put<T>(
@@ -66,6 +72,7 @@ class FluteApiService {
     Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
     OnError? onError,
+    ResponseType? responseType,
   }) async =>
       await _baseRequest(
         'PUT',
@@ -73,6 +80,7 @@ class FluteApiService {
         queryParameters: queryParameters,
         body: body,
         onError: onError,
+        responseType: responseType,
       );
 
   Future<Response<T>> delete<T>(
@@ -80,6 +88,7 @@ class FluteApiService {
     Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
     OnError? onError,
+    ResponseType? responseType,
   }) async =>
       _baseRequest(
         'DELETE',
@@ -87,6 +96,7 @@ class FluteApiService {
         queryParameters: queryParameters,
         body: body,
         onError: onError,
+        responseType: responseType,
       );
 
   @protected
@@ -96,6 +106,7 @@ class FluteApiService {
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? body,
     OnError? onError,
+    ResponseType? responseType,
   }) async {
     final _dio = Dio();
     if (onError != null) {
@@ -116,6 +127,7 @@ class FluteApiService {
         queryParameters: queryParameters,
         headers: headers,
         baseUrl: _endPoint,
+        responseType: responseType,
       ),
     );
 
