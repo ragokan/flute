@@ -1,3 +1,12 @@
+analyzer:
+  exclude:
+    - flutter/**
+    - build/**
+    - .dart_tool/**
+    - example/**
+    - ios/**
+    - android/**
+
 linter:
   rules:
     - prefer_const_constructors
@@ -42,7 +51,7 @@ linter:
     - prefer_final_fields
     - use_setters_to_change_properties
     - avoid_setters_without_getters
-    - avoid_returning_null
+    # - avoid_returning_null  # removed in Dart >=3.3.0
     - avoid_returning_this
     - omit_local_variable_types
     - avoid_return_types_on_setters

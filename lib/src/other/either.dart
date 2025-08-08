@@ -5,13 +5,13 @@ abstract class Either<L, R> {
 
   T fold<T>(T Function(L l) ifLeft, T Function(R r) ifRight);
 
-  bool get isLeft => this is L;
+  bool get isLeft => this is Left<L, R>;
 
-  bool get isRight => this is R;
+  bool get isRight => this is Right<L, R>;
 
-  L get left => (this as L);
+  L get left => (this as Left<L, R>).value;
 
-  R get right => (this as R);
+  R get right => (this as Right<L, R>).value;
 }
 
 class Left<L, R> extends Either<L, R> {

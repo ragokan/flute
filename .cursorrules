@@ -1,0 +1,12 @@
+# Cursor Rules for flute
+
+- Always run `flutter pub get` after modifying `pubspec.yaml`.
+- Run `flutter analyze` and `flutter test` locally before committing.
+- Do not change the public API or behavior without explicit instruction. Prefer additive, backward-compatible edits.
+- Keep `analysis_options.yaml` exclusions updated to avoid analyzing SDK/vendor folders.
+- Favor small, focused edits. When refactoring, separate mechanical changes from behavioral changes.
+- Add unit tests for fixes and new features. Prefer deterministic tests using `fake_async` and `testWidgets` where applicable.
+- Follow the style in `analysis_options.yaml`. Avoid reformatting unrelated code.
+- For storage-related code, avoid platform-specific calls in unit tests; prefer injecting temp dirs or using guards.
+- CI should run: `flutter pub get`, `flutter analyze`, `flutter test`.
+- Keep README examples in sync with the public API.
